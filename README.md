@@ -23,7 +23,7 @@ rake generate:session_secret
 Launch web server with following command:
 
 ```bash
-rake run
+rake run:dev
 ```
 
 Server would listen on http://0.0.0.0:9292.
