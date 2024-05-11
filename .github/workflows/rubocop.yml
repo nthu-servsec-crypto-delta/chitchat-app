@@ -1,0 +1,15 @@
+name: Rubocop Check
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_ONLY: rubocop # install rubocop group only
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up ruby with .ruby-version
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Run Rubocop Check
+      run: bundle exec rubocop --parallel
