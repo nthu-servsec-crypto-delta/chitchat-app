@@ -1,1 +1,9 @@
 h1 Login
+form action="/auth/login" method="post"
+  .mb-3
+    label.form-label for="username" Username
+    input.form-control type="text" id="username" name="username"
+  .mb-3
+    label.form-label for="password" Password
+    input.form-control type="password" id="password" name="password"
+  button.btn.btn-primary type="submit" Login
