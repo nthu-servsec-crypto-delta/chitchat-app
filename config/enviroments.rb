@@ -13,7 +13,7 @@ module ChitChat
     # Environment variables setup
     Figaro.application = Figaro::Application.new(
       environment:,
-      path: File.expand_path('config/secrets.yml')
+      path: File.expand_path('config/app.yml')
     )
     Figaro.load
     def self.config = Figaro.env
