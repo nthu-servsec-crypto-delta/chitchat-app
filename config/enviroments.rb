@@ -5,7 +5,7 @@ require 'figaro'
 require 'logger'
 require 'rack/session'
 
-module Credence
+module ChitChat
   # Configuration for the API
   class App < Roda
     plugin :environments
