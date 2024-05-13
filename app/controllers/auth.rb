@@ -41,7 +41,7 @@ module ChitChat
         # GET /auth/logout
         routing.get do
           session[:current_account] = nil
-          flash[:success] = 'You have been logged out'
+          flash[:notice] = 'You have been logged out'
           routing.redirect '/'
         end
       end
