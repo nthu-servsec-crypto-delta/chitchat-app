@@ -14,6 +14,8 @@ module ChitChat
     plugin :flash
 
     route do |routing|
+      @current_account = session[:current_account]
+
       routing.public
       routing.assets
       routing.multi_route
