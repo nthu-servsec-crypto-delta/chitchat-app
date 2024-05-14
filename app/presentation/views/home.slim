@@ -1,1 +1,11 @@
-h1 It Works!
+.bg-secondary-subtle.my-3.px-3.py-5.text-center
+  h1 
+    img.d-inline-block.me-2 height="64" width="64" src="/logo.png" alt="logo" title="logo"
+    | ChitChat 
+  p An app that allows you to send messages to nearby people.
+
+
+p.fst-italic Coming Soon...
+
+- unless @current_account
+  a href="/auth/login" Login
