@@ -1,0 +1,18 @@
+.d-flex.justify-content-center.align-items-center
+  .card.p-3
+    h1.text-center Login
+    form action="/auth/login" method="post"
+      .mb-3
+        label.form-label for="username" Username
+        input.form-control type="text" id="username" name="username"
+      .mb-3
+        label.form-label for="password" Password
+        input.form-control type="password" id="password" name="password"
+
+      .d-grid.gap-2
+        button.btn.btn-success type="submit"
+          i.bi.bi-box-arrow-in-right.me-2
+          | Login
+        a.btn.btn-primary.disabled href="/auth/login"
+            i.bi.bi-pencil-square.me-2
+            | Register

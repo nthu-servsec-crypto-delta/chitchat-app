@@ -5,7 +5,7 @@ require 'figaro'
 require 'logger'
 require 'rack/session'
 
-module Credence
+module ChitChat
   # Configuration for the API
   class App < Roda
     plugin :environments
@@ -13,7 +13,7 @@ module Credence
     # Environment variables setup
     Figaro.application = Figaro::Application.new(
       environment:,
-      path: File.expand_path('config/secrets.yml')
+      path: File.expand_path('config/app.yml')
     )
     Figaro.load
     def self.config = Figaro.env
