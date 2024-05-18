@@ -3,6 +3,7 @@
 require 'roda'
 require_relative 'app'
 require_relative '../services/account_authenticate'
+require_relative '../services/register_account'
 
 module ChitChat
   # ChitChat App
@@ -10,7 +11,7 @@ module ChitChat
     route('auth') do |routing| # rubocop:disable Metrics/BlockLength
       @login_route = '/auth/login'
 
-      routing.is 'login' do
+      routing.is 'login' do # rubocop:disable Metrics/BlockLength
         # GET /auth/login
         routing.get do
           if session[:current_account].nil?
@@ -34,6 +35,13 @@ module ChitChat
           flash.now[:error] = 'Invalid username or password'
           response.status = 403
           view 'login'
+        rescue AccountAuthenticate::ApiServerError => e
+          App.logger.warn "API server error: #{e.inspect}"
+          App.logger.warn e.backtrace.join('\n')
+
+          flash[:error] = 'Something went wrong. Please try again later.'
+          response.status = 500
+          routing.redirect @login_route
         end
       end
 
