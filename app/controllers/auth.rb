@@ -45,6 +45,18 @@ module ChitChat
           routing.redirect '/'
         end
       end
+
+      routing.is 'register' do
+        # GET /auth/register
+        routing.get do
+          view 'register'
+        end
+
+        # POST /auth/register
+        routing.post do
+          view 'register'
+        end
+      end
     end
   end
 end
