@@ -46,6 +46,7 @@ module ChitChat
         end
       end
 
+      @register_route = '/auth/register'
       routing.is 'register' do
         # GET /auth/register
         routing.get do
@@ -54,7 +55,20 @@ module ChitChat
 
         # POST /auth/register
         routing.post do
-          view 'register'
+          RegisterAccount.new(App.config).call(
+            email: routing.params['email'],
+            username: routing.params['username'],
+            password: routing.params['password']
+          )
+
+          flash[:success] = 'Account created successfully'
+          routing.redirect @login_route
+        rescue RegisterAccount::InvalidAccount => e
+          App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
+          App.logger.error e.backtrace.join('\n')
+
+          flash.now[:error] = 'Cannot register account with provided information'
+          routing.redirect @register_route
         end
       end
     end
