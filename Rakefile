@@ -2,6 +2,13 @@
 
 # rubocop:disable Style/HashSyntax
 require 'rake/testtask'
+require_relative 'require_app'
+
+desc 'Run all tests'
+Rake::TestTask.new(:spec) do |t|
+  t.pattern = 'spec/**/*_spec.rb'
+  t.warning = false
+end
 
 task :print_env do
   puts "Environment: #{ENV.fetch('RACK_ENV', 'development')}"

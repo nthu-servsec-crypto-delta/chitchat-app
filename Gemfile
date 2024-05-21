@@ -25,6 +25,7 @@ gem 'rbnacl'
 group :test do
   gem 'rack-test'
   gem 'rerun'
+  gem 'webmock'
 end
 
 # Debugging
