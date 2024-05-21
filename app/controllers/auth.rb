@@ -63,7 +63,7 @@ module ChitChat
 
         # POST /auth/register
         routing.post do
-          RegisterAccount.new(App.config).call(
+          AccountRegister.new(App.config).call(
             email: routing.params['email'],
             username: routing.params['username'],
             password: routing.params['password']
@@ -71,7 +71,7 @@ module ChitChat
 
           flash[:success] = 'Account created successfully'
           routing.redirect @login_route
-        rescue RegisterAccount::InvalidAccount => e
+        rescue AccountRegister::InvalidAccount => e
           App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
           App.logger.error e.backtrace.join('\n')
 
