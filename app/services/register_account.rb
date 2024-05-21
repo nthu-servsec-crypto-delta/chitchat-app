@@ -5,7 +5,7 @@ require 'json'
 
 module ChitChat
   # Service to register an account
-  class AccountAuthenticate
+  class AccountRegister
     class InvalidAccount < StandardError; end
 
     def initialize(config)
