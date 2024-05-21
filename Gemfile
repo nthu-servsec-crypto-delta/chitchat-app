@@ -18,6 +18,7 @@ gem 'rake'
 
 # Security
 gem 'bundler-audit'
+gem 'rack-ssl-enforcer'
 gem 'rbnacl'
 
 # Testing

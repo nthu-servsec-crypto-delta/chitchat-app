@@ -4,6 +4,7 @@ require 'roda'
 require 'figaro'
 require 'logger'
 require 'rack/session'
+require 'rack/ssl-enforcer'
 
 module ChitChat
   # Configuration for the API
@@ -23,6 +24,11 @@ module ChitChat
     use Rack::Session::Cookie,
         expire_after: ONE_MONTH,
         secret: config.SESSION_SECRET
+
+    # Force SSL
+    configure :production do
+      use Rack::SslEnforcer, hsts: true
+    end
 
     # HTTP Request logging
     configure :development, :production do
