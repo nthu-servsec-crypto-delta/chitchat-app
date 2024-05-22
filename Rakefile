@@ -24,15 +24,20 @@ task :style do
   sh 'rubocop . --parallel'
 end
 
+task :load_lib do
+  require_app('lib')
+end
+
 # Generate new cryptographic keys
 namespace :generate do
+  desc 'Create rbnacl key'
+  task :msg_key => :load_lib do
+    puts "New MSG_KEY (base64): #{SecureMessage.generate_key}"
+  end
+
   desc 'Create cookie secret'
-  task :session_secret do
-    require 'base64'
-    require 'rbnacl'
-    session_secret = RbNaCl::Random.random_bytes(64)
-    secret64 = Base64.strict_encode64(session_secret)
-    puts "New SESSION_SECRET (base64): #{secret64}"
+  task :session_secret => :load_lib do
+    puts "New SESSION_SECRET (base64): #{SecureSession.generate_secret}"
   end
 end
 

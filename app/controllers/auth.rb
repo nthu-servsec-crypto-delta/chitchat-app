@@ -28,7 +28,7 @@ module ChitChat
             password: routing.params['password']
           )
 
-          session[:current_account] = account
+          SecureSession.new(session).set(:current_account, account)
           flash[:success] = "Hi, #{account['username']}"
           routing.redirect '/'
         rescue AccountAuthenticate::UnauthorizedError
@@ -48,7 +48,7 @@ module ChitChat
       routing.is 'logout' do
         # GET /auth/logout
         routing.get do
-          session[:current_account] = nil
+          SecureSession.new(session).delete(:current_account)
           flash[:notice] = 'You have been logged out'
           routing.redirect '/'
         end

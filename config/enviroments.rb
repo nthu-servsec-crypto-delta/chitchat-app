@@ -5,6 +5,9 @@ require 'figaro'
 require 'logger'
 require 'rack/session'
 require 'rack/ssl-enforcer'
+require_relative '../require_app'
+
+require_app('lib')
 
 module ChitChat
   # Configuration for the API
@@ -24,6 +27,8 @@ module ChitChat
     use Rack::Session::Cookie,
         expire_after: ONE_MONTH,
         secret: config.SESSION_SECRET
+
+    SecureMessage.setup(ENV.delete('MSG_KEY'))
 
     # Force SSL
     configure :production do
