@@ -4,6 +4,10 @@
 require 'rake/testtask'
 require_relative 'require_app'
 
+task :default do
+  puts `rake -T`
+end
+
 desc 'Run all tests'
 Rake::TestTask.new(:spec) do |t|
   t.pattern = 'spec/**/*_spec.rb'
