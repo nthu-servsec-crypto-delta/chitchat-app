@@ -13,6 +13,17 @@ class SecureSession
     SecureMessage.encoded_random_bytes(SESSION_SECRET_BYTES)
   end
 
+  def self.setup(redis_url)
+    @redis_url = redis_url
+  end
+
+  def self.wipe_redis_sessions
+    redis = Redis.new(url: @redis_url)
+    cnt = redis.dbsize
+    redis.flushall
+    cnt
+  end
+
   ## Instance methods to store and retrieve encrypted session data
   def initialize(session)
     @session = session

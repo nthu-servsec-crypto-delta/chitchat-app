@@ -52,4 +52,14 @@ namespace :run do
     sh 'puma -p 9292'
   end
 end
+
+namespace :session do
+  # Clear all sessions in redis
+  desc 'Clear all sessions in redis'
+  task :wipe => :load_lib do
+    require 'redis'
+    wiped = SecureSession.wipe_redis_sessions
+    puts "Cleared #{wiped} sessions"
+  end
+end
 # rubocop:enable Style/HashSyntax
