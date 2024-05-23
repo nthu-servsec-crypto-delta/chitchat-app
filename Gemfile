@@ -8,10 +8,12 @@ gem 'json'
 # Web
 gem 'puma'
 gem 'rack-session'
+gem 'redis-rack'
 gem 'roda'
 gem 'slim'
 
 gem 'http'
+gem 'redis'
 
 # Configuration
 gem 'figaro'
