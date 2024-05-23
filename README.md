@@ -11,8 +11,13 @@ bundle install
 ```
 
 ## Setup
-Set API endpoint in `config/app.yml`.  
+Set API endpoint and redis url in `config/app.yml`.  
 See `config/app.example.yml` for example.
+
+To generate new message secret, use the following command:
+```bash
+rake generate:msg_key
+```
 
 To generate new cookie secret for session, use the following command:  
 ```bash

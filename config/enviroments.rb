@@ -4,6 +4,11 @@ require 'roda'
 require 'figaro'
 require 'logger'
 require 'rack/session'
+require 'rack/ssl-enforcer'
+require 'rack/session/redis'
+require_relative '../require_app'
+
+require_app('lib')
 
 module ChitChat
   # Configuration for the API
@@ -20,9 +25,25 @@ module ChitChat
 
     # Session configuration
     ONE_MONTH = 30 * 24 * 60 * 60
-    use Rack::Session::Cookie,
-        expire_after: ONE_MONTH,
-        secret: config.SESSION_SECRET
+    @redis_url = ENV.delete('REDISCLOUD_URL')
+    SecureMessage.setup(ENV.delete('MSG_KEY'))
+    SecureSession.setup(@redis_url)
+
+    configure :development, :test do
+      use Rack::Session::Pool,
+          expire_after: ONE_MONTH
+    end
+
+    configure :production do
+      use Rack::Session::Redis,
+          expire_after: ONE_MONTH,
+          redis_server: @redis_url
+    end
+
+    # Force SSL
+    configure :production do
+      use Rack::SslEnforcer, hsts: true
+    end
 
     # HTTP Request logging
     configure :development, :production do

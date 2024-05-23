@@ -1,0 +1,15 @@
+.row.justify-content-md-center
+  .col-6 
+    h1 Register
+    form action="/auth/register" method="post"
+      .my-3
+        label.form-label for="username" Username
+        input#username.form-control name="username" type="text"
+      .my-3
+        label.form-label for="email" Password
+        input#password.form-control name="password" type="password"
+      .my-3
+        label.form-label for="email" Email
+        input#email.form-control name="email" type="text"
+      .my-3.text-end
+        button.btn.btn-primary type="submit" Submit

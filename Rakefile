@@ -2,6 +2,17 @@
 
 # rubocop:disable Style/HashSyntax
 require 'rake/testtask'
+require_relative 'require_app'
+
+task :default do
+  puts `rake -T`
+end
+
+desc 'Run all tests'
+Rake::TestTask.new(:spec) do |t|
+  t.pattern = 'spec/**/*_spec.rb'
+  t.warning = false
+end
 
 task :print_env do
   puts "Environment: #{ENV.fetch('RACK_ENV', 'development')}"
@@ -17,15 +28,20 @@ task :style do
   sh 'rubocop . --parallel'
 end
 
+task :load_lib do
+  require_app('lib')
+end
+
 # Generate new cryptographic keys
 namespace :generate do
+  desc 'Create rbnacl key'
+  task :msg_key => :load_lib do
+    puts "New MSG_KEY (base64): #{SecureMessage.generate_key}"
+  end
+
   desc 'Create cookie secret'
-  task :session_secret do
-    require 'base64'
-    require 'rbnacl'
-    session_secret = RbNaCl::Random.random_bytes(64)
-    secret64 = Base64.strict_encode64(session_secret)
-    puts "New SESSION_SECRET (base64): #{secret64}"
+  task :session_secret => :load_lib do
+    puts "New SESSION_SECRET (base64): #{SecureSession.generate_secret}"
   end
 end
 
@@ -34,6 +50,16 @@ namespace :run do
   desc 'Run Web App in development mode'
   task :dev => :print_env do
     sh 'puma -p 9292'
+  end
+end
+
+namespace :session do
+  # Clear all sessions in redis
+  desc 'Clear all sessions in redis'
+  task :wipe => :load_lib do
+    require 'redis'
+    wiped = SecureSession.wipe_redis_sessions
+    puts "Cleared #{wiped} sessions"
   end
 end
 # rubocop:enable Style/HashSyntax
