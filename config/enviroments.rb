@@ -25,7 +25,7 @@ module ChitChat
 
     # Session configuration
     ONE_MONTH = 30 * 24 * 60 * 60
-    @redis_url = ENV.delete('REDIS_URL')
+    @redis_url = ENV.delete('REDISCLOUD_URL')
     SecureMessage.setup(ENV.delete('MSG_KEY'))
     SecureSession.setup(@redis_url)
 
