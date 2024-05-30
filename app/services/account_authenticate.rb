@@ -19,7 +19,7 @@ module ChitChat
       raise UnauthorizedError if response.code == 403
       raise ApiServerError unless response.code == 200
 
-      response.parse['attributes']['account']
+      response.parse
     end
   end
 end
