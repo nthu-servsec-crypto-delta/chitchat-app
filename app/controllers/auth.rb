@@ -34,7 +34,7 @@ module ChitChat
           )
 
           CurrentSession.new(session).current_account = current_account
-          flash[:success] = "Hi, #{account['username']}"
+          flash[:success] = "Hi, #{CurrentSession.new(session).current_account.username}"
           routing.redirect '/'
         rescue AuthenticateAccount::UnauthorizedError
           flash.now[:error] = 'Invalid username or password'
