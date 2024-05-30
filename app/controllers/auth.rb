@@ -80,6 +80,15 @@ module ChitChat
           end
         end
 
+        # GET /auth/register/:token
+        routing.get String do |registration_token|
+          @registration_data = SecureMessage.decrypt(registration_token)
+          flash.now[:notice] = 'Email Verified! Please choose a new password'
+          view :register_confirm, locals: { registration_token: }
+        rescue RbNaCl::CryptoError
+          flash[:error] = 'Invalid token'
+          routing.redirect '/'
+        end
       end
     end
   end
