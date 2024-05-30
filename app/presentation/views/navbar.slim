@@ -12,7 +12,7 @@ nav.navbar.navbar-expand-lg.bg-secondary data-bs-theme="dark"
         li.nav-item
           a.nav-link.disabled href="/events" Events
       .d-flex.justify-content-end.g
-        - unless @current_account
+        - unless @current_account.logged_in?
           a.btn.btn-success.me-2 href="/auth/login"
             i.bi.bi-box-arrow-in-right.me-2
             | Login
@@ -22,10 +22,10 @@ nav.navbar.navbar-expand-lg.bg-secondary data-bs-theme="dark"
         - else
           ul.navbar-nav.mb-2.mb-lg-0
             li.nav-item.dropdown
-              a.nav-link.dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" #{@current_account['username']}
+              a.nav-link.dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" #{@current_account.username}
               ul.dropdown-menu.dropdown-menu-end
                 li
-                  a.dropdown-item href="/account/#{@current_account['username']}"
+                  a.dropdown-item href="/account/#{@current_account.username}"
                     i.bi.bi-person.me-2
                     | Account
                 li

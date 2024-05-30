@@ -15,14 +15,13 @@ module ChitChat
 
     route do |routing|
       @current_account = CurrentSession.new(session).current_account
-
       routing.public
       routing.assets
       routing.multi_route
 
       # GET /
       routing.root do
-        view 'home'
+        view 'home', locals: { current_account: @current_account }
       end
     end
   end
