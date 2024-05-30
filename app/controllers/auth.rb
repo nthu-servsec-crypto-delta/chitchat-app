@@ -14,7 +14,7 @@ module ChitChat
       routing.is 'login' do # rubocop:disable Metrics/BlockLength
         # GET /auth/login
         routing.get do
-          if session[:current_account].nil?
+          if session[:current_account].nil? # we shouldn't directly access session object
             view 'login'
           else
             routing.redirect '/'
@@ -23,12 +23,17 @@ module ChitChat
 
         # POST /auth/login
         routing.post do
-          account = AuthenticateAccount.new(App.config).call(
+          account_info = AuthenticateAccount.new(App.config).call(
             username: routing.params['username'],
             password: routing.params['password']
           )
 
-          SecureSession.new(session).set(:current_account, account)
+          current_account = Account.new(
+            account_info[:account],
+            account_info[:auth_token]
+          )
+
+          CurrentSession.new(session).current_account = current_account
           flash[:success] = "Hi, #{account['username']}"
           routing.redirect '/'
         rescue AuthenticateAccount::UnauthorizedError
@@ -48,7 +53,7 @@ module ChitChat
       routing.is 'logout' do
         # GET /auth/logout
         routing.get do
-          SecureSession.new(session).delete(:current_account)
+          CurrentSession.new(session).delete(:current_account)
           flash[:notice] = 'You have been logged out'
           routing.redirect '/'
         end
