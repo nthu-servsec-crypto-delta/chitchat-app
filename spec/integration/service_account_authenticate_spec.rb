@@ -28,11 +28,16 @@ describe 'Authenticate Service Spec' do
 
   describe 'Account Authenticate Service' do
     it 'HAPPY: should login as an authenticated user' do
+      auth_account_file = 'spec/fixtures/auth_account.json'
+      auth_account_fixture = File.read(auth_account_file)
+
       WebMock.stub_request(:post, "#{API_URL}/auth/authenticate")
              .with(body: @test_credentials.to_json)
-             .to_return(body: @test_user.to_json, status: 200, headers: { 'Content-Type' => 'application/json' })
+             .to_return(body: auth_account_fixture, status: 200, headers: { 'Content-Type' => 'application/json' })
 
-      account = ChitChat::AccountAuthenticate.new(app.config).call(**@test_credentials)
+      response = ChitChat::AccountAuthenticate.new(app.config).call(**@test_credentials)
+      account = response['account']
+
       _(account).wont_be_nil
       _(account['id']).must_equal @test_user[:id]
       _(account['username']).must_equal @test_user[:username]
