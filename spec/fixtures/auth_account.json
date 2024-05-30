@@ -1,1 +1,2 @@
-{"type":"authenticated_account","attributes":{"account":{"id":1,"username":"admin","email":"admin@adm.in"},"auth_token":"RiC6pD5pyixg3JY4OA-kRzue_SiUBYsspjeGbnfoGLuW1_xu4pf3dJ2Djx0zzWiWmZ-G3mjI99IY0n2qsfasOlaJPO1DJYS3HoAsDqOLbehUNf3c5cf_-pZEY_V-YMf4n-i6_qkQhMiVTn8l5FIXf-Fp3MoTIcA="}}
+
+{"type":"authenticated_account","attributes":{"account":{"type":"account","attributes":{"username":"admin","email":"admin@adm.in"}},"auth_token":"h2ok-RLz2wRbb-atefPW3_7UzODhKtl-4ALnSQkdU5ZiIqT09KIZLgMcfbfWPq4fWdDa40roNiAhD8HMLVB-RjQpeJV5kj4JDXXrQhre66UYJMqry9yx7FQK-gDYIUPgSbgsObwKB3ovXPmYdA_dDGtL_WmXQiYH20wG8SRtVxlR_fDOCW5WcpfAWh9U1cfI864tZx7kc5PZ"}}

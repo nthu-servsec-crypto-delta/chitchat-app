@@ -15,8 +15,7 @@ describe 'Authenticate Service Spec' do
       password: 'admin'
     }
 
-    @test_user = {
-      id: 1,
+    @api_account = {
       username: 'admin',
       email: 'admin@adm.in'
     }
@@ -26,22 +25,22 @@ describe 'Authenticate Service Spec' do
     WebMock.reset!
   end
 
-  describe 'Account Authenticate Service' do
+  describe 'Authenticate Account Service' do
     it 'HAPPY: should login as an authenticated user' do
       auth_account_file = 'spec/fixtures/auth_account.json'
-      auth_account_fixture = File.read(auth_account_file)
+
+      auth_return_json = File.read(auth_account_file)
 
       WebMock.stub_request(:post, "#{API_URL}/auth/authenticate")
              .with(body: @test_credentials.to_json)
-             .to_return(body: auth_account_fixture, status: 200, headers: { 'Content-Type' => 'application/json' })
+             .to_return(body: auth_return_json,
+                        headers: { 'content-type' => 'application/json' })
 
-      response = ChitChat::AccountAuthenticate.new(app.config).call(**@test_credentials)
-      account = response['account']
-
+      auth = ChitChat::AuthenticateAccount.new(app.config).call(**@test_credentials)
+      account = auth[:account]
       _(account).wont_be_nil
-      _(account['id']).must_equal @test_user[:id]
-      _(account['username']).must_equal @test_user[:username]
-      _(account['email']).must_equal @test_user[:email]
+      _(account['username']).must_equal @api_account[:username]
+      _(account['email']).must_equal @api_account[:email]
     end
 
     it 'SAD: should reject invalid credentials' do
@@ -54,8 +53,8 @@ describe 'Authenticate Service Spec' do
              )
 
       _(proc {
-        ChitChat::AccountAuthenticate.new(app.config).call(**@invalid_credentials)
-      }).must_raise ChitChat::AccountAuthenticate::UnauthorizedError
+        ChitChat::AuthenticateAccount.new(app.config).call(**@invalid_credentials)
+      }).must_raise ChitChat::AuthenticateAccount::UnauthorizedError
     end
   end
 end

@@ -2,7 +2,7 @@
 
 require 'roda'
 require_relative 'app'
-require_relative '../services/account_authenticate'
+require_relative '../services/authenticate_account'
 require_relative '../services/register_account'
 
 module ChitChat
@@ -23,7 +23,7 @@ module ChitChat
 
         # POST /auth/login
         routing.post do
-          account = AccountAuthenticate.new(App.config).call(
+          account = AuthenticateAccount.new(App.config).call(
             username: routing.params['username'],
             password: routing.params['password']
           )
@@ -31,11 +31,11 @@ module ChitChat
           SecureSession.new(session).set(:current_account, account)
           flash[:success] = "Hi, #{account['username']}"
           routing.redirect '/'
-        rescue AccountAuthenticate::UnauthorizedError
+        rescue AuthenticateAccount::UnauthorizedError
           flash.now[:error] = 'Invalid username or password'
           response.status = 403
           view 'login'
-        rescue AccountAuthenticate::ApiServerError => e
+        rescue AuthenticateAccount::ApiServerError => e
           App.logger.warn "API server error: #{e.inspect}"
           App.logger.warn e.backtrace.join('\n')
 
