@@ -55,29 +55,31 @@ module ChitChat
       end
 
       @register_route = '/auth/register'
-      routing.is 'register' do
-        # GET /auth/register
-        routing.get do
-          view 'register'
+      routing.on 'register' do # rubocop:disable Metrics/BlockLength
+        routing.is do
+          # GET /auth/register
+          routing.get do
+            view 'register'
+          end
+
+          # POST /auth/register
+          routing.post do
+            VerifyRegistration.new(App.config).call(
+              email: routing.params['email'],
+              username: routing.params['username']
+            )
+
+            flash[:notice] = 'Please check your email to confirm your account'
+            routing.redirect '/'
+          rescue VerifyRegistration::InvalidRegistrationError => e
+            App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
+            App.logger.error e.backtrace.join("\n")
+
+            flash[:error] = "Cannot register account: #{e.message}"
+            routing.redirect @register_route
+          end
         end
 
-        # POST /auth/register
-        routing.post do
-          AccountRegister.new(App.config).call(
-            email: routing.params['email'],
-            username: routing.params['username'],
-            password: routing.params['password']
-          )
-
-          flash[:success] = 'Account created successfully'
-          routing.redirect @login_route
-        rescue AccountRegister::InvalidAccount => e
-          App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
-          App.logger.error e.backtrace.join('\n')
-
-          flash.now[:error] = 'Cannot register account with provided information'
-          routing.redirect @register_route
-        end
       end
     end
   end
