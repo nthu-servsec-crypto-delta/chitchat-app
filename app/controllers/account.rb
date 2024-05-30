@@ -7,6 +7,9 @@ module ChitChat
   # ChitChat App
   class App < Roda
     route('account') do |routing| # rubocop:disable Metrics/BlockLength
+      @login_route = '/auth/login'
+      @register_route = '/auth/register'
+
       routing.on do # rubocop:disable Metrics/BlockLength
         # GET /account/<username>
         routing.get String do |username|
