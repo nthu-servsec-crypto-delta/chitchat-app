@@ -22,7 +22,7 @@ module ChitChat
       res = HTTP.post("#{App.config.API_URL}/auth/register", json: registration_data)
 
       data = res.parse
-      raise InvalidRegistrationError, data[:message] unless res.status.success?
+      raise InvalidRegistrationError, data['message'] unless res.status.success?
     rescue HTTP::Error
       raise ApiServerError
     end
