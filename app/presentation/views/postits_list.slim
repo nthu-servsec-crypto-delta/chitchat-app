@@ -1,0 +1,14 @@
+h3 Your Postits
+table.table
+  thead
+    tr
+      th #
+      th Message
+      th Location
+  tbody
+    - postits.each do |postit|
+      tr
+        td 
+          a href="/postits/#{postit.id}" #{postit.id}
+        td #{postit.message}
+        td #{postit.location.values.join(', ')}
