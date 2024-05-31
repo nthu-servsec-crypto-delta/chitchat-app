@@ -13,7 +13,7 @@ module ChitChat
       routing.on do # rubocop:disable Metrics/BlockLength
         # GET /account/<username>
         routing.get String do |username|
-          if @current_account && @current_account['username'] == username
+          if @current_account.logged_in? && @current_account.username == username
             view 'account'
           else
             routing.redirect '/auth/login'
