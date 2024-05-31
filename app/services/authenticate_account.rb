@@ -5,7 +5,7 @@ require 'json'
 
 module ChitChat
   # Service to authenticate an account
-  class AccountAuthenticate
+  class AuthenticateAccount
     class UnauthorizedError < StandardError; end
     class ApiServerError < StandardError; end
 
@@ -19,7 +19,12 @@ module ChitChat
       raise UnauthorizedError if response.code == 403
       raise ApiServerError unless response.code == 200
 
-      response.parse
+      account_info = JSON.parse(response.to_s)['attributes']
+
+      { account: account_info['account']['attributes'],
+        auth_token: account_info['auth_token'] }
+    rescue HTTP::ConnectionError
+      raise ApiServerError
     end
   end
 end

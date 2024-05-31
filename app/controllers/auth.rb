@@ -2,7 +2,7 @@
 
 require 'roda'
 require_relative 'app'
-require_relative '../services/account_authenticate'
+require_relative '../services/authenticate_account'
 require_relative '../services/register_account'
 
 module ChitChat
@@ -14,7 +14,7 @@ module ChitChat
       routing.is 'login' do # rubocop:disable Metrics/BlockLength
         # GET /auth/login
         routing.get do
-          if session[:current_account].nil?
+          if session[:current_account].nil? # we shouldn't directly access session object
             view 'login'
           else
             routing.redirect '/'
@@ -23,21 +23,26 @@ module ChitChat
 
         # POST /auth/login
         routing.post do
-          account = AccountAuthenticate.new(App.config).call(
+          account_info = AuthenticateAccount.new(App.config).call(
             username: routing.params['username'],
             password: routing.params['password']
           )
 
-          SecureSession.new(session).set(:current_account, account)
-          flash[:success] = "Hi, #{account['username']}"
+          current_account = Account.new(
+            account_info[:account],
+            account_info[:auth_token]
+          )
+
+          CurrentSession.new(session).current_account = current_account
+          flash[:success] = "Hi, #{current_account.username}"
           routing.redirect '/'
-        rescue AccountAuthenticate::UnauthorizedError
+        rescue AuthenticateAccount::UnauthorizedError
           flash.now[:error] = 'Invalid username or password'
           response.status = 403
           view 'login'
-        rescue AccountAuthenticate::ApiServerError => e
+        rescue AuthenticateAccount::ApiServerError => e
           App.logger.warn "API server error: #{e.inspect}"
-          App.logger.warn e.backtrace.join('\n')
+          App.logger.warn e.backtrace.join("\n")
 
           flash[:error] = 'Something went wrong. Please try again later.'
           response.status = 500
@@ -48,35 +53,46 @@ module ChitChat
       routing.is 'logout' do
         # GET /auth/logout
         routing.get do
-          SecureSession.new(session).delete(:current_account)
+          CurrentSession.new(session).delete
           flash[:notice] = 'You have been logged out'
           routing.redirect '/'
         end
       end
 
       @register_route = '/auth/register'
-      routing.is 'register' do
-        # GET /auth/register
-        routing.get do
-          view 'register'
+      routing.on 'register' do # rubocop:disable Metrics/BlockLength
+        routing.is do
+          # GET /auth/register
+          routing.get do
+            view 'register'
+          end
+
+          # POST /auth/register
+          routing.post do
+            VerifyRegistration.new(App.config).call(
+              email: routing.params['email'],
+              username: routing.params['username']
+            )
+
+            flash[:notice] = 'Please check your email to confirm your account'
+            routing.redirect '/'
+          rescue VerifyRegistration::InvalidRegistrationError => e
+            App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
+            App.logger.error e.backtrace.join("\n")
+
+            flash[:error] = "Cannot register account: #{e.message}"
+            routing.redirect @register_route
+          end
         end
 
-        # POST /auth/register
-        routing.post do
-          AccountRegister.new(App.config).call(
-            email: routing.params['email'],
-            username: routing.params['username'],
-            password: routing.params['password']
-          )
-
-          flash[:success] = 'Account created successfully'
-          routing.redirect @login_route
-        rescue AccountRegister::InvalidAccount => e
-          App.logger.error "ERROR CREATING ACCOUNT: #{e.inspect}"
-          App.logger.error e.backtrace.join('\n')
-
-          flash.now[:error] = 'Cannot register account with provided information'
-          routing.redirect @register_route
+        # GET /auth/register/:token
+        routing.get String do |registration_token|
+          @registration_data = SecureMessage.decrypt(registration_token)
+          flash.now[:notice] = 'Email Verified! Please choose a new password'
+          view :register_confirm, locals: { registration_token: }
+        rescue RbNaCl::CryptoError
+          flash[:error] = 'Invalid token'
+          routing.redirect '/'
         end
       end
     end
