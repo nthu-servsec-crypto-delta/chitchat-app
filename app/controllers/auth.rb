@@ -14,7 +14,7 @@ module ChitChat
       routing.is 'login' do # rubocop:disable Metrics/BlockLength
         # GET /auth/login
         routing.get do
-          if session[:current_account].nil? # we shouldn't directly access session object
+          if CurrentSession.new(session).current_account.logged_out?
             view 'login'
           else
             routing.redirect '/'
