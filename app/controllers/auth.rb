@@ -42,7 +42,7 @@ module ChitChat
           view 'login'
         rescue AuthenticateAccount::ApiServerError => e
           App.logger.warn "API server error: #{e.inspect}"
-          App.logger.warn e.backtrace.join('\n')
+          App.logger.warn e.backtrace.join("\n")
 
           flash[:error] = 'Something went wrong. Please try again later.'
           response.status = 500
