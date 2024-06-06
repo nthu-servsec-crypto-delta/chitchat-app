@@ -3,8 +3,8 @@
 require 'http'
 
 module ChitChat
-  # Get all postits
-  class GetAllPostits
+  # Get postits created by account
+  class GetAccountPostits
     def initialize(config)
       @config = config
     end

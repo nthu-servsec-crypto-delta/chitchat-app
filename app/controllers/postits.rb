@@ -10,7 +10,7 @@ module ChitChat
         # GET /postits/
         routing.get do
           if @current_account.logged_in?
-            postits_data = GetAllPostits.new(App.config).call(@current_account)
+            postits_data = GetAccountPostits.new(App.config).call(@current_account)
 
             postits = Postits.new(postits_data).all
 
