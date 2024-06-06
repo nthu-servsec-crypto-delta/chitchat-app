@@ -14,8 +14,7 @@ module ChitChat
       @radius = event_data['radius']
       @start_time = event_data['start_time']
       @end_time = event_data['end_time']
-      # @organizer = event_data['organizer'].nil? ? nil : EventParticipant.new(event_data['organizer']['attributes'])
-      @organizer = EventParticipant.new({ 'username' => 'organizer', 'email' => 'organ@iz.er' })
+      @organizer = event_data['organizer'].nil? ? nil : EventParticipant.new(event_data['organizer']['attributes'])
       @co_organizers = event_data['co_organizers'].map { |data| EventParticipant.new(data['attributes']) }
       @participants = event_data['participants'].map { |data| EventParticipant.new(data['attributes']) }
     end
