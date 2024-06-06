@@ -11,11 +11,10 @@ module ChitChat
           # GET /events/
           routing.get do
             if @current_account.logged_in?
-              events_data = GetAccountEvents.new(App.config).call(@current_account)
+              events_response = GetAccountEvents.new(App.config).call(@current_account)
+              events = Events.new(events_response).all
 
-              events = Events.new(events_data).all
-
-              view :events_list, locals: { events:, events_data: }
+              view :events_list, locals: { events: }
             else
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'
