@@ -23,11 +23,14 @@ module ChitChat
         end
 
         routing.get String do |event_id|
-          event_data = GetEventDetail.new(App.config).call(@current_account, event_id)
+          event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
+          event_data = JSON.parse(event_response['data'])['attributes']
+          policies_data = JSON.parse(event_response['policies'])
+          policy = PolicySummary.new(policies_data)
 
           event = Event.new(event_data)
 
-          view :event_detail, locals: { event: }
+          view :event_detail, locals: { event:, policy: }
         end
       end
     end
