@@ -1,0 +1,113 @@
+.row.mb-3
+  .col.col-sm-9.d-flex.flex-column.justify-content-center
+    h1 #{event.name}
+    p #{event.description}
+    p
+      i.bi.bi-geo-alt-fill.me-2
+      | #{event.location.values.join(', ')}
+    p
+      i.bi.bi-clock.me-2
+      | #{event.start_time} ~ #{event.end_time}
+    .d-grid
+      button.btn.btn-primary.mt-2 data-bs-toggle="modal" data-bs-target="#edit-event-modal"
+        i.bi.bi-pencil.me-2
+        | Edit Event
+      button.btn.btn-danger.mt-2
+        i.bi.bi-calendar-x.me-2
+        | Delete Event
+      button.btn.btn-success.mt-2
+        i.bi.bi-arrow-down-right-circle.me-2
+        | Join Event
+      button.btn.btn-danger.mt-2
+        i.bi.bi-escape.me-2
+        | Leave Event
+  .col.col-sm-3
+    .card.mx-auto.my-2
+      .card-body
+        h5.card-title Organizer
+        - unless event.organizer.nil?
+          span
+            i.bi.bi-person-fill.me-2
+            a href="/account/#{event.organizer.username}" #{event.organizer.username}
+          br
+          span
+            i.bi.bi-envelope-fill.me-2
+            a href="mailto:#{event.organizer.email}" #{event.organizer.email}
+        - else 
+          p No organizer
+    .card.mx-auto.my-2
+      .card-body
+        .card-title.d-flex.justify-content-between.align-items-center
+          h5 Co-organizers
+          button.btn.btn-outline-primary data-bs-toggle="modal" data-bs-target="#add-co-organizer-modal"
+            i.bi.bi-person-plus-fill
+        ul.list-group.list-group-flush id="co-organizers"
+          - for co_organizer in event.co_organizers
+            li.list-group-item.px-0
+              .row
+                .col
+                  span
+                    i.bi.bi-person.me-2
+                    a href="/account/#{co_organizer.username}" #{co_organizer.username}
+                  br
+                  span
+                    i.bi.bi-envelope.me-2
+                    a href="mailto:#{co_organizer.email}" #{co_organizer.email}
+                .col.col-auto
+                  button.btn.btn-danger.mt-2 data-username="#{co_organizer.username}"
+                    i.bi.bi-person-x-fill
+h3 Participants
+hr
+.d-grid style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"
+  - for participant in event.participants
+    span.text-center
+      i.bi.bi-person-circle.me-2
+      a href="/account/#{participant.username}" #{participant.username}
+// edit event modal
+#edit-event-modal.modal.fade
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      form action="/events/#{event.id}" method="POST"
+        .modal-header
+          h5.modal-title Edit Event
+          .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+        .modal-body
+          .mb-3
+            label.form-label for="name" Name
+            input.form-control type="text" id="name" name="name" value=event.name required=""
+          .mb-3
+            label.form-label for="description" Description
+            textarea.form-control id="description" name="description" required="" rows="3" = event.description
+          .mb-3
+            label.form-label for="longitude" Longitude
+            input.form-control type="number" id="longitude" name="longitude" value=event.location['longitude'] required="" 
+          .mb-3
+            label.form-label for="latitude" Latitude
+            input.form-control type="number" id="latitude" name="latitude" value=event.location['latitude'] required=""
+          .mb-3
+            label.form-label for="radius" Radius
+            input.form-control type="number" id="radius" name="radius" value=event.radius required=""
+          .mb-3
+            label.form-label for="start_time" Start Time
+            input.form-control type="text" id="start_time" name="start_time" value=event.start_time required=""
+          .mb-3
+            label.form-label for="end_time" End Time
+            input.form-control type="text" id="end_time" name="end_time" value=event.end_time required=""
+        .modal-footer
+          .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
+          button.btn.btn-primary type="submit" Save
+// add co-organizer modal
+#add-co-organizer-modal.modal.fade
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      form action="/events/#{event.id}/co_organizers" method="POST"
+        .modal-header
+          h5.modal-title Add Co-organizer
+          .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+        .modal-body
+          .mb-3
+            label.form-label for="username" Username
+            input.form-control type="text" id="username" name="username" required=""
+        .modal-footer
+          .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
+          button.btn.btn-primary type="submit" Add

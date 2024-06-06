@@ -1,0 +1,20 @@
+h3 Your Events
+table.table
+  thead
+    tr
+      th #
+      th Name
+      th Location
+      th Start Time
+      th End Time
+  tbody
+    - events.each do |event|
+      tr
+        td 
+          a href="/events/#{event.id}" #{event.id}
+        td #{event.name}
+        td #{event.location.values.join(', ')}
+        td #{event.start_time}
+        td #{event.end_time}
+code
+  pre #{events_data}

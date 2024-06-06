@@ -11,6 +11,8 @@ nav.navbar.navbar-expand-lg.bg-secondary data-bs-theme="dark"
           a.nav-link href="/" Home
         li.nav-item
           a.nav-link href="/postits" Postits
+        li.nav-item
+          a.nav-link href="/events" Events
       .d-flex.justify-content-end.g
         - unless @current_account.logged_in?
           a.btn.btn-success.me-2 href="/auth/login"
