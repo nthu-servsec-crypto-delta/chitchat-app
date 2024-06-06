@@ -47,28 +47,34 @@
             button.btn.btn-outline-primary data-bs-toggle="modal" data-bs-target="#add-co-organizer-modal"
               i.bi.bi-person-plus-fill
         ul.list-group.list-group-flush id="co-organizers"
-          - for co_organizer in event.co_organizers
-            li.list-group-item.px-0
-              .row
-                .col
-                  span
-                    i.bi.bi-person.me-2
-                    a href="/account/#{co_organizer.username}" #{co_organizer.username}
-                  br
-                  span
-                    i.bi.bi-envelope.me-2
-                    a href="mailto:#{co_organizer.email}" #{co_organizer.email}
-                - if policy.can_remove_co_organizers
-                  .col.col-auto
-                    button.btn.btn-danger.mt-2 data-username="#{co_organizer.username}"
-                      i.bi.bi-person-x-fill
+          - if event.co_organizers.length > 0
+            - for co_organizer in event.co_organizers
+              li.list-group-item.px-0
+                .row
+                  .col
+                    span
+                      i.bi.bi-person.me-2
+                      a href="/account/#{co_organizer.username}" #{co_organizer.username}
+                    br
+                    span
+                      i.bi.bi-envelope.me-2
+                      a href="mailto:#{co_organizer.email}" #{co_organizer.email}
+                  - if policy.can_remove_co_organizers
+                    .col.col-auto
+                      button.btn.btn-danger.mt-2 data-username="#{co_organizer.username}"
+                        i.bi.bi-person-x-fill
+          - else
+            i No co-organizers
 h3 Participants
 hr
 .d-grid style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"
-  - for participant in event.participants
-    span.text-center
-      i.bi.bi-person-circle.me-2
-      a href="/account/#{participant.username}" #{participant.username}
+  - if event.participants.length > 0
+    - for participant in event.participants
+      span.text-center
+        i.bi.bi-person-circle.me-2
+        a href="/account/#{participant.username}" #{participant.username}
+  - else
+    i No participants
 // edit event modal
 - if policy.can_edit
   #edit-event-modal.modal.fade
