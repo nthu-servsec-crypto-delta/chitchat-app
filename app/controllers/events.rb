@@ -22,6 +22,7 @@ module ChitChat
           end
         end
 
+        # GET /events/[event_id]
         routing.get String do |event_id|
           event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
           event_data = JSON.parse(event_response['data'])['attributes']
