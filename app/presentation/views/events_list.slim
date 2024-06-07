@@ -41,26 +41,28 @@ table.table
           .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
         .modal-body
             .mb-3
-            label.form-label for="name" Name
-            input.form-control type="text" id="name" name="name" required=""
+              label.form-label for="name" Name
+              input.form-control type="text" id="name" name="name" required=""
             .mb-3
-            label.form-label for="description" Description
-            textarea.form-control id="description" name="description" required="" rows="3"
+              label.form-label for="description" Description
+              textarea.form-control id="description" name="description" required="" rows="3"
+            .row
+              label.form-label Location
+              .col.mb-3
+                label.form-label for="longitude" Longitude
+                input.form-control type="number" id="longitude" name="longitude" required="" 
+              .col.mb-3
+                label.form-label for="latitude" Latitude
+                input.form-control type="number" id="latitude" name="latitude" required=""
             .mb-3
-            label.form-label for="longitude" Longitude
-            input.form-control type="number" id="longitude" name="longitude" required="" 
+              label.form-label for="radius" Radius
+              input.form-control type="number" id="radius" name="radius" required=""
             .mb-3
-            label.form-label for="latitude" Latitude
-            input.form-control type="number" id="latitude" name="latitude" required=""
+              label.form-label for="start_time" Start Time
+              input.form-control type="text" id="start_time" name="start_time" required=""
             .mb-3
-            label.form-label for="radius" Radius
-            input.form-control type="number" id="radius" name="radius" required=""
-            .mb-3
-            label.form-label for="start_time" Start Time
-            input.form-control type="text" id="start_time" name="start_time" required=""
-            .mb-3
-            label.form-label for="end_time" End Time
-            input.form-control type="text" id="end_time" name="end_time" required=""
+              label.form-label for="end_time" End Time
+              input.form-control type="text" id="end_time" name="end_time" required=""
         .modal-footer
           .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
           button.btn.btn-primary type="submit" Create

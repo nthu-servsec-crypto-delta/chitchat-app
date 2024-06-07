@@ -105,12 +105,14 @@ hr
             .mb-3
               label.form-label for="description" Description
               textarea.form-control id="description" name="description" required="" rows="3" = event.description
-            .mb-3
-              label.form-label for="longitude" Longitude
-              input.form-control type="number" id="longitude" name="longitude" value=event.location['longitude'] required="" 
-            .mb-3
-              label.form-label for="latitude" Latitude
-              input.form-control type="number" id="latitude" name="latitude" value=event.location['latitude'] required=""
+            .row
+              label.form-label Location
+              .col.mb-3
+                label.form-label for="longitude" Longitude
+                input.form-control type="number" id="longitude" name="longitude" value=event.location['longitude'] required="" 
+              .col.mb-3
+                label.form-label for="latitude" Latitude
+                input.form-control type="number" id="latitude" name="latitude" value=event.location['latitude'] required=""
             .mb-3
               label.form-label for="radius" Radius
               input.form-control type="number" id="radius" name="radius" value=event.radius required=""
