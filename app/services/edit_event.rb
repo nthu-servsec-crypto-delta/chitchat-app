@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ChitChat
-  # Create event
+  # Edit event
   class EditEvent
     class ForbiddenError < StandardError; end
     class InvalidRequestError < StandardError; end
@@ -10,9 +10,9 @@ module ChitChat
       @config = config
     end
 
-    def call(current_account, event_data) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def call(current_account, event_id, event_data) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       response = HTTP.auth("Bearer #{current_account.auth_token}")
-                     .put("#{@config.API_URL}/events/#{event_data['id']}",
+                     .put("#{@config.API_URL}/events/#{event_id}",
                           json: {
                             name: event_data['name'],
                             description: event_data['description'],
