@@ -7,6 +7,7 @@ table.table
       th Location
       th Start Time
       th End Time
+      th Role
   tbody
     - events.each do |event|
       tr
@@ -16,6 +17,14 @@ table.table
         td #{event.location.values.join(', ')}
         td #{event.start_time}
         td #{event.end_time}
+        - if event.organizer.username == @current_account.username
+          td Organizer
+        - elsif !event.co_organizers.find { |co_organizer| co_organizer.username == @current_account.username }.nil?
+          td Co-organizer
+        - elsif !event.participants.find { |participant| participant.username == @current_account.username }.nil?
+          td Participant
+        - else
+          td -
 
 .text-end
   button.btn.btn-primary data-bs-toggle="modal" data-bs-target="#create-event-modal"
