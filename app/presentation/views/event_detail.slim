@@ -78,7 +78,14 @@
                           i.bi.bi-person-x-fill
             - else
               i No co-organizers
-h3 Participants
+.row
+  .col
+    h3 Participants
+  .col.col-auto 
+    - if policy.can_approve_applicants || policy.can_reject_applicants
+      button.btn.btn-outline-primary data-bs-toggle="modal" data-bs-target="#applicants-modal"
+        i.bi.bi-person-lines-fill.me-2
+        | Show Applicants (#{event.applicants.length})
 hr
 .d-grid style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"
   - if event.participants.length > 0
@@ -142,4 +149,31 @@ hr
           .modal-footer
             .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
             button.btn.btn-primary type="submit" Add
+// applicants modal
+- if policy.can_approve_applicants || policy.can_reject_applicants
+  #applicants-modal.modal.fade
+    .modal-dialog.modal-dialog-centered.modal-dialog-scrollable
+      .modal-content
+        form id="applicants-form" action="/events/#{event.id}/applicants" method="POST"
+          input type="hidden" name="action"
+          input type="hidden" name="email"
+          .modal-header
+            h5.modal-title Applicants
+            .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+          .modal-body
+              ul.list-group.list-group-flush
+                - if event.applicants.length > 0
+                  - for applicant in event.applicants
+                    li.list-group-item.px-0
+                      .row
+                        .col
+                          span
+                            i.bi.bi-person.me-2
+                            a href="/account/#{applicant.username}" #{applicant.username}
+                          br
+                          span
+                            i.bi.bi-envelope.me-2
+                            a href="mailto:#{applicant.email}" #{applicant.email}
+                - else
+                  i No applicants
 script src="/assets/js/event_detail.js"
