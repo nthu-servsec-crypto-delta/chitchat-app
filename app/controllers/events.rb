@@ -54,9 +54,16 @@ module ChitChat
 
           routing.post do
             if @current_account.logged_in?
+              case routing.params['action']
+              when 'edit'
                 EditEvent.new(App.config).call(@current_account, event_id, routing.params)
                 flash[:success] = 'Event updated successfully'
                 routing.redirect @current_event_route
+              when 'delete'
+                DeleteEvent.new(App.config).call(@current_account, event_id)
+                flash[:success] = 'Event deleted'
+                routing.redirect '/events'
+              end
             else
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'

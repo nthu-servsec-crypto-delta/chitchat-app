@@ -13,10 +13,12 @@
         button.btn.btn-primary.mt-2 data-bs-toggle="modal" data-bs-target="#edit-event-modal"
           i.bi.bi-pencil.me-2
           | Edit Event
-      - if policy.can_delete
-        button.btn.btn-danger.mt-2
-          i.bi.bi-calendar-x.me-2
-          | Delete Event
+      form id="event-action-form" action="/events/#{event.id}" method="POST" style="display: contents;"
+        input type="hidden" name="action" value="delete"
+        - if policy.can_delete
+          button.btn.btn-danger.mt-2
+            i.bi.bi-calendar-x.me-2
+            | Delete Event
       form id="participant-action-form" action="/events/#{event.id}/participant" method="POST" style="display: contents;"
         - if policy.can_apply
           input type="hidden" name="action" value="apply"
@@ -92,6 +94,7 @@ hr
     .modal-dialog.modal-dialog-centered
       .modal-content
         form id="edit-event-form" action="/events/#{event.id}" method="POST"
+          input type="hidden" name="action" value="edit"
           .modal-header
             h5.modal-title Edit Event
             .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
