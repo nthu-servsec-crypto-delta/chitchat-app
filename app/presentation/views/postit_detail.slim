@@ -1,0 +1,13 @@
+.d-grid.gap-4
+  .row.justify-content-md-center
+    .col.col-4
+      .card
+        .card-header
+          | Postit
+          button.btn.btn-close.float-end title="Not Implemented" type="button" aria-label="Close"
+        .card-body
+          p = postit.message
+        .card-footer
+          p.card-text
+            i.bi.bi-geo-alt.me-2
+            | #{postit.location.values.join(', ')}
