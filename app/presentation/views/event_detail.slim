@@ -17,14 +17,22 @@
         button.btn.btn-danger.mt-2
           i.bi.bi-calendar-x.me-2
           | Delete Event
-      - if policy.can_apply
-        button.btn.btn-success.mt-2
-          i.bi.bi-arrow-down-right-circle.me-2
-          | Join Event
-      - if policy.can_leave
-        button.btn.btn-danger.mt-2
-          i.bi.bi-escape.me-2
-          | Leave Event
+      form action="/events/#{event.id}/participant" method="POST" style="display: contents;"
+        - if policy.can_apply
+          input type="hidden" name="action" value="apply"
+          button.btn.btn-success.mt-2
+            i.bi.bi-arrow-down-right-circle.me-2
+            | Join Event
+        - if policy.can_leave
+          input type="hidden" name="action" value="leave"
+          button.btn.btn-danger.mt-2
+            i.bi.bi-escape.me-2
+            | Leave Event
+        - if policy.can_cancel
+          input type="hidden" name="action" value="cancel"
+          button.btn.btn-outline-danger.mt-2
+            i.bi.bi-x-lg.me-2
+            | Cancel Application
   .col.col-sm-3
     .card.mx-auto.my-2
       .card-body
