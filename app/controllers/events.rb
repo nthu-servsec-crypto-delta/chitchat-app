@@ -4,7 +4,7 @@ require 'roda'
 
 module ChitChat
   # ChitChat App
-  class App < Roda
+  class App < Roda # rubocop:disable Metrics/ClassLength
     route('events') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on do # rubocop:disable Metrics/BlockLength
         routing.is do
@@ -37,7 +37,7 @@ module ChitChat
           end
         end
 
-        routing.on String do |event_id| # rubocop:disable Lint/BlockLength
+        routing.on String do |event_id| # rubocop:disable Metrics/BlockLength
           @current_event_route = "/events/#{event_id}"
 
           routing.is do # rubocop:disable Metrics/BlockLength
@@ -76,9 +76,9 @@ module ChitChat
             end
           end
 
-          routing.on 'participant' do # rubocop:disable Lint/BlockLength
+          routing.on 'participant' do # rubocop:disable Metrics/BlockLength
             # POST /events/[event_id]/participant
-            routing.post do # rubocop:disable Lint/BlockLength
+            routing.post do # rubocop:disable Metrics/BlockLength
               if @current_account.logged_in?
                 redirect_to_event = true
 
