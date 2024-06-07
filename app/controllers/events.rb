@@ -51,6 +51,9 @@ module ChitChat
               event = Event.new(event_data)
 
               view :event_detail, locals: { event:, policy: }
+            rescue GetEventDetail::NotFoundError => e
+              flash[:error] = e.message
+              routing.redirect '/events'
             end
 
             # POST /events/[event_id]
