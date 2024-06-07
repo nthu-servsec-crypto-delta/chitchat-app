@@ -40,37 +40,40 @@ module ChitChat
         routing.on String do |event_id| # rubocop:disable Lint/BlockLength
           @current_event_route = "/events/#{event_id}"
 
-          # GET /events/[event_id]
-          routing.get do
-            event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
-            event_data = event_response['attributes']
-            policies_data = event_response['policies']
-            policy = PolicySummary.new(policies_data)
+          routing.is do # rubocop:disable Metrics/BlockLength
+            # GET /events/[event_id]
+            routing.get do
+              event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
+              event_data = event_response['attributes']
+              policies_data = event_response['policies']
+              policy = PolicySummary.new(policies_data)
 
-            event = Event.new(event_data)
+              event = Event.new(event_data)
 
-            view :event_detail, locals: { event:, policy: }
-          end
-
-          routing.post do
-            if @current_account.logged_in?
-              case routing.params['action']
-              when 'edit'
-                EditEvent.new(App.config).call(@current_account, event_id, routing.params)
-                flash[:success] = 'Event updated successfully'
-                routing.redirect @current_event_route
-              when 'delete'
-                DeleteEvent.new(App.config).call(@current_account, event_id)
-                flash[:success] = 'Event deleted'
-                routing.redirect '/events'
-              end
-            else
-              flash[:notice] = 'Please login'
-              routing.redirect '/auth/login'
+              view :event_detail, locals: { event:, policy: }
             end
-          rescue EditEvent::ForbiddenError, EditEvent::InvalidRequestError => e
-            flash[:error] = e.message
-            routing.redirect @current_event_route
+
+            # POST /events/[event_id]
+            routing.post do
+              if @current_account.logged_in?
+                case routing.params['action']
+                when 'edit'
+                  EditEvent.new(App.config).call(@current_account, event_id, routing.params)
+                  flash[:success] = 'Event updated successfully'
+                  routing.redirect @current_event_route
+                when 'delete'
+                  DeleteEvent.new(App.config).call(@current_account, event_id)
+                  flash[:success] = 'Event deleted'
+                  routing.redirect '/events'
+                end
+              else
+                flash[:notice] = 'Please login'
+                routing.redirect '/auth/login'
+              end
+            rescue EditEvent::ForbiddenError, EditEvent::InvalidRequestError => e
+              flash[:error] = e.message
+              routing.redirect @current_event_route
+            end
           end
 
           routing.on 'participant' do # rubocop:disable Lint/BlockLength
