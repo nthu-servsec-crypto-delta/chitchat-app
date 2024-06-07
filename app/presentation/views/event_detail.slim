@@ -17,7 +17,7 @@
         button.btn.btn-danger.mt-2
           i.bi.bi-calendar-x.me-2
           | Delete Event
-      form action="/events/#{event.id}/participant" method="POST" style="display: contents;"
+      form id="participant-action-form" action="/events/#{event.id}/participant" method="POST" style="display: contents;"
         - if policy.can_apply
           input type="hidden" name="action" value="apply"
           button.btn.btn-success.mt-2
@@ -54,25 +54,28 @@
           - if policy.can_add_co_organizers
             button.btn.btn-outline-primary data-bs-toggle="modal" data-bs-target="#add-co-organizer-modal"
               i.bi.bi-person-plus-fill
-        ul.list-group.list-group-flush id="co-organizers"
-          - if event.co_organizers.length > 0
-            - for co_organizer in event.co_organizers
-              li.list-group-item.px-0
-                .row
-                  .col
-                    span
-                      i.bi.bi-person.me-2
-                      a href="/account/#{co_organizer.username}" #{co_organizer.username}
-                    br
-                    span
-                      i.bi.bi-envelope.me-2
-                      a href="mailto:#{co_organizer.email}" #{co_organizer.email}
-                  - if policy.can_remove_co_organizers
-                    .col.col-auto
-                      button.btn.btn-danger.mt-2 data-username="#{co_organizer.username}"
-                        i.bi.bi-person-x-fill
-          - else
-            i No co-organizers
+        form id="remove-co-organizer-form" action="/events/#{event.id}/co_organizer" method="POST" style="display: contents;"
+          input type="hidden" name="action" value="remove"
+          input type="hidden" name="email" id="remove-email"
+          ul.list-group.list-group-flush id="co-organizers"
+            - if event.co_organizers.length > 0
+              - for co_organizer in event.co_organizers
+                li.list-group-item.px-0
+                  .row
+                    .col
+                      span
+                        i.bi.bi-person.me-2
+                        a href="/account/#{co_organizer.username}" #{co_organizer.username}
+                      br
+                      span
+                        i.bi.bi-envelope.me-2
+                        a href="mailto:#{co_organizer.email}" #{co_organizer.email}
+                    - if policy.can_remove_co_organizers
+                      .col.col-auto
+                        button.btn.btn-danger.mt-2 data-username="#{co_organizer.username}" data-email="#{co_organizer.email}"
+                          i.bi.bi-person-x-fill
+            - else
+              i No co-organizers
 h3 Participants
 hr
 .d-grid style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"
@@ -88,7 +91,7 @@ hr
   #edit-event-modal.modal.fade
     .modal-dialog.modal-dialog-centered
       .modal-content
-        form action="/events/#{event.id}" method="POST"
+        form id="edit-event-form" action="/events/#{event.id}" method="POST"
           .modal-header
             h5.modal-title Edit Event
             .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
@@ -122,6 +125,7 @@ hr
   #add-co-organizer-modal.modal.fade
     .modal-dialog.modal-dialog-centered
       .modal-content
+        form id="add-co-organizer-form" action="/events/#{event.id}/co_organizer" method="POST"
           input type="hidden" name="action" value="add"
           .modal-header
             h5.modal-title Add Co-organizer
