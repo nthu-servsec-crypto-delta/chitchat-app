@@ -122,7 +122,7 @@ hr
   #add-co-organizer-modal.modal.fade
     .modal-dialog.modal-dialog-centered
       .modal-content
-        form action="/events/#{event.id}/co_organizers" method="POST"
+          input type="hidden" name="action" value="add"
           .modal-header
             h5.modal-title Add Co-organizer
             .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
@@ -133,3 +133,4 @@ hr
           .modal-footer
             .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
             button.btn.btn-primary type="submit" Add
+script src="/assets/js/event_detail.js"

@@ -8,6 +8,7 @@ module ChitChat
   class App < Roda
     plugin :render, engine: 'slim', views: 'app/presentation/views'
     plugin :assets, css: 'style.css', path: 'app/presentation/assets'
+    plugin :assets, js: 'event_detail.js', path: 'app/presentation/assets'
     plugin :public, root: 'app/presentation/public'
     plugin :multi_route
 

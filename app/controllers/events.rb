@@ -73,6 +73,30 @@ module ChitChat
               routing.redirect @current_event_route
             end
           end
+
+          # POST /events/[event_id]/co_organizer
+          routing.on 'co_organizer' do
+            routing.post do
+              if @current_account.logged_in?
+                case routing.params['action']
+                when 'add'
+                  AddCoOrganizer.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'Co-organizer added successfully'
+                when 'remove'
+                  RemoveCoOrganizer.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'Co-organizer removed successfully'
+                end
+              else
+                flash[:notice] = 'Please login'
+                routing.redirect '/auth/login'
+              end
+
+              routing.redirect @current_event_route
+            rescue AddCoOrganizer::ForbiddenError, RemoveCoOrganizer::ForbiddenError => e
+              flash[:error] = e.message
+              routing.redirect @current_event_route
+            end
+          end
         end
       end
     end
