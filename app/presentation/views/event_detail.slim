@@ -174,6 +174,13 @@ hr
                           span
                             i.bi.bi-envelope.me-2
                             a href="mailto:#{applicant.email}" #{applicant.email}
+                        .col.col-auto.d-flex.gap-2
+                          - if policy.can_approve_applicants
+                            button.btn.btn-success.mt-2 title="Approve" data-username="#{applicant.username}" data-email="#{applicant.email}"
+                              i.bi.bi-person-plus-fill
+                          - if policy.can_reject_applicants
+                            button.btn.btn-danger.mt-2 title="Reject" data-username="#{applicant.username}" data-email="#{applicant.email}"
+                              i.bi.bi-person-x-fill
                 - else
                   i No applicants
 script src="/assets/js/event_detail.js"

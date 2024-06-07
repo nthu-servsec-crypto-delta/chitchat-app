@@ -133,13 +133,39 @@ module ChitChat
                 else
                   flash[:error] = 'Invalid action'
                 end
+
+                routing.redirect @current_event_route
+              else
+                flash[:notice] = 'Please login'
+                routing.redirect '/auth/login'
+              end
+            rescue AddCoOrganizer::ForbiddenError, RemoveCoOrganizer::ForbiddenError => e
+              flash[:error] = e.message
+              routing.redirect @current_event_route
+            end
+          end
+
+          routing.on 'applicants' do
+            # POST /events/[event_id]/applicants
+            routing.post do
+              if @current_account.logged_in?
+                case routing.params['action']
+                when 'approve'
+                  ApproveEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'Applicant approved'
+                when 'reject'
+                  RejectEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'Applicant rejected'
+                else
+                  flash[:error] = 'Invalid action'
+                end
               else
                 flash[:notice] = 'Please login'
                 routing.redirect '/auth/login'
               end
 
               routing.redirect @current_event_route
-            rescue AddCoOrganizer::ForbiddenError, RemoveCoOrganizer::ForbiddenError => e
+            rescue ApproveEventApplication::ForbiddenError, RejectEventApplication::ForbiddenError => e
               flash[:error] = e.message
               routing.redirect @current_event_route
             end
