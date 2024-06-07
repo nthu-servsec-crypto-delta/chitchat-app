@@ -37,10 +37,10 @@ module ChitChat
           end
         end
 
-        # GET /events/[event_id]
         routing.on String do |event_id| # rubocop:disable Lint/BlockLength
           @current_event_route = "/events/#{event_id}"
 
+          # GET /events/[event_id]
           routing.get do
             event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
             event_data = event_response['attributes']
@@ -50,6 +50,20 @@ module ChitChat
             event = Event.new(event_data)
 
             view :event_detail, locals: { event:, policy: }
+          end
+
+          routing.post do
+            if @current_account.logged_in?
+              EditEvent.new(App.config).call(@current_account, routing.params.merge('id' => event_id))
+              flash[:success] = 'Event updated successfully'
+              routing.redirect @current_event_route
+            else
+              flash[:notice] = 'Please login'
+              routing.redirect '/auth/login'
+            end
+          rescue EditEvent::ForbiddenError, EditEvent::InvalidRequestError => e
+            flash[:error] = e.message
+            routing.redirect @current_event_route
           end
 
           routing.on 'participant' do # rubocop:disable Lint/BlockLength
