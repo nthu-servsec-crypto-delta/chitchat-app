@@ -24,6 +24,8 @@ module ChitChat
 
         # GET /events/[event_id]
         routing.on String do |event_id| # rubocop:disable Lint/BlockLength
+          @current_event_route = "/events/#{event_id}"
+
           routing.get do
             event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
             event_data = event_response['attributes']
@@ -57,7 +59,7 @@ module ChitChat
                 end
 
                 if redirect_to_event
-                  routing.redirect "/events/#{event_id}"
+                  routing.redirect @current_event_route
                 else
                   routing.redirect '/events'
                 end
@@ -68,7 +70,7 @@ module ChitChat
             rescue ApplyEvent::ForbiddenError, LeaveEvent::ForbiddenError,
                    CancelEventApplication::ForbiddenError => e
               flash[:error] = e.message
-              routing.redirect "/events/#{event_id}"
+              routing.redirect @current_event_route
             end
           end
         end
