@@ -130,6 +130,8 @@ module ChitChat
                 when 'remove'
                   RemoveCoOrganizer.new(App.config).call(@current_account, event_id, routing.params['email'])
                   flash[:notice] = 'Co-organizer removed successfully'
+                else
+                  flash[:error] = 'Invalid action'
                 end
               else
                 flash[:notice] = 'Please login'
