@@ -8,7 +8,7 @@ module ChitChat
     route('events') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on do # rubocop:disable Metrics/BlockLength
         routing.is do
-          # GET /events/
+          # GET /events
           routing.get do
             if @current_account.logged_in?
               events_response = GetAccountEvents.new(App.config).call(@current_account)
@@ -19,6 +19,21 @@ module ChitChat
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'
             end
+          end
+
+          # POST /events
+          routing.post do
+            if @current_account.logged_in?
+              event_id = CreateEvent.new(App.config).call(@current_account, routing.params)
+              flash[:success] = 'Event created successfully'
+              routing.redirect "/events/#{event_id}"
+            else
+              flash[:notice] = 'Please login'
+              routing.redirect '/auth/login'
+            end
+          rescue CreateEvent::ForbiddenError, CreateEvent::InvalidRequestError => e
+            flash[:error] = e.message
+            routing.redirect '/events'
           end
         end
 
@@ -54,6 +69,12 @@ module ChitChat
                 when 'cancel'
                   CancelEventApplication.new(App.config).call(@current_account, event_id)
                   flash[:notice] = 'You have successfully cancelled your application to the event'
+                when 'approve'
+                  ApproveEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'You have successfully approved the application'
+                when 'reject'
+                  RejectEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
+                  flash[:notice] = 'You have successfully rejected the application'
                 else
                   flash[:error] = 'Invalid action'
                 end

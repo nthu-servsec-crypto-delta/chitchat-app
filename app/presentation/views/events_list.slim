@@ -16,3 +16,42 @@ table.table
         td #{event.location.values.join(', ')}
         td #{event.start_time}
         td #{event.end_time}
+
+.text-end
+  button.btn.btn-primary data-bs-toggle="modal" data-bs-target="#create-event-modal"
+    i.bi.bi-plus-circle-fill.me-2
+    | Create Event
+
+// Create event Modal
+#create-event-modal.modal.fade
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      form action="/events" method="POST"
+        .modal-header
+          h5.modal-title Create Event
+          .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+        .modal-body
+            .mb-3
+            label.form-label for="name" Name
+            input.form-control type="text" id="name" name="name" required=""
+            .mb-3
+            label.form-label for="description" Description
+            textarea.form-control id="description" name="description" required="" rows="3"
+            .mb-3
+            label.form-label for="longitude" Longitude
+            input.form-control type="number" id="longitude" name="longitude" required="" 
+            .mb-3
+            label.form-label for="latitude" Latitude
+            input.form-control type="number" id="latitude" name="latitude" required=""
+            .mb-3
+            label.form-label for="radius" Radius
+            input.form-control type="number" id="radius" name="radius" required=""
+            .mb-3
+            label.form-label for="start_time" Start Time
+            input.form-control type="text" id="start_time" name="start_time" required=""
+            .mb-3
+            label.form-label for="end_time" End Time
+            input.form-control type="text" id="end_time" name="end_time" required=""
+        .modal-footer
+          .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
+          button.btn.btn-primary type="submit" Create
