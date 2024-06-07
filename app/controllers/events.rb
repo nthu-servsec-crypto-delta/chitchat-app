@@ -5,8 +5,8 @@ require 'roda'
 module ChitChat
   # ChitChat App
   class App < Roda
-    route('events') do |routing|
-      routing.on do
+    route('events') do |routing| # rubocop:disable Metrics/BlockLength
+      routing.on do # rubocop:disable Metrics/BlockLength
         routing.is do
           # GET /events/
           routing.get do
