@@ -44,10 +44,19 @@ module ChitChat
           rescue CreatePostit::ValidationError => e
             flash[:error] = e.message
             routing.redirect '/postits'
-            view :postits_list, locals: { postits: }
-          else
-            flash[:notice] = 'Please login'
-            routing.redirect '/auth/login'
+          end
+        end
+
+        routing.on String do |postit_id|
+          @current_postit_route = "/postits/#{postit_id}"
+
+          # GET /postits/[postit_id]
+          routing.get do
+            postit_data = GetPostitDetail.new(App.config).call(@current_account, postit_id)
+
+            postit = Postit.new(postit_data)
+
+            view :postit_detail, locals: { postit: }
           end
         end
       end
