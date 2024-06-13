@@ -1,0 +1,4 @@
+en:
+  errors:
+    username: Username must be at least 4 characters long, and contain only letters, numbers, and underscores
+    email: Must be a valid email address

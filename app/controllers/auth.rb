@@ -22,7 +22,13 @@ module ChitChat
         end
 
         # POST /auth/login
-        routing.post do
+        routing.post do # rubocop:disable Metrics/BlockLength
+          credentails = Form::LoginCredentials.new.call(routing.params)
+          if credentails.failure?
+            flash[:error] = Form.validation_errors(credentails)
+            routing.redirect @login_route
+          end
+
           account_info = AuthenticateAccount.new(App.config).call(
             username: routing.params['username'],
             password: routing.params['password']
@@ -69,6 +75,12 @@ module ChitChat
 
           # POST /auth/register
           routing.post do
+            registration = Form::Registration.new.call(routing.params)
+            if registration.failure?
+              flash[:error] = Form.validation_errors(registration)
+              routing.redirect @register_route
+            end
+
             VerifyRegistration.new(App.config).call(
               email: routing.params['email'],
               username: routing.params['username']

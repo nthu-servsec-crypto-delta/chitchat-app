@@ -25,6 +25,9 @@ module ChitChat
           # POST /postits
           routing.post do
             if @current_account.logged_in?
+              postit = Form::Postit.new.call(routing.params)
+              raise Form::ValidationError, Form.validation_errors(postit) if postit.failure?
+
               postit_data = {
                 location: {
                   latitude: routing.params['latitude'],
@@ -41,7 +44,7 @@ module ChitChat
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'
             end
-          rescue CreatePostit::ValidationError => e
+          rescue CreatePostit::ValidationError, Form::ValidationError => e
             flash[:error] = e.message
             routing.redirect '/postits'
           end

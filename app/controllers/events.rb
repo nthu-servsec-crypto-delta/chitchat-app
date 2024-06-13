@@ -24,6 +24,9 @@ module ChitChat
           # POST /events
           routing.post do
             if @current_account.logged_in?
+              event = Form::Event.new.call(routing.params)
+              raise Form::ValidationError, Form.validation_errors(event) if event.failure?
+
               event_id = CreateEvent.new(App.config).call(@current_account, routing.params)
               flash[:success] = 'Event created successfully'
               routing.redirect "/events/#{event_id}"
@@ -31,7 +34,7 @@ module ChitChat
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'
             end
-          rescue CreateEvent::ForbiddenError, CreateEvent::InvalidRequestError => e
+          rescue CreateEvent::ForbiddenError, CreateEvent::InvalidRequestError, Form::ValidationError => e
             flash[:error] = e.message
             routing.redirect '/events'
           end
@@ -61,6 +64,9 @@ module ChitChat
               if @current_account.logged_in?
                 case routing.params['action']
                 when 'edit'
+                  event = Form::Event.new.call(routing.params)
+                  raise Form::ValidationError, Form.validation_errors(event) if event.failure?
+
                   EditEvent.new(App.config).call(@current_account, event_id, routing.params)
                   flash[:success] = 'Event updated successfully'
                   routing.redirect @current_event_route
@@ -73,7 +79,7 @@ module ChitChat
                 flash[:notice] = 'Please login'
                 routing.redirect '/auth/login'
               end
-            rescue EditEvent::ForbiddenError, EditEvent::InvalidRequestError => e
+            rescue EditEvent::ForbiddenError, EditEvent::InvalidRequestError, Form::ValidationError => e
               flash[:error] = e.message
               routing.redirect @current_event_route
             end
