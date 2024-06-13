@@ -5,9 +5,20 @@ require_relative 'app'
 require_relative '../services/authenticate_account'
 require_relative '../services/register_account'
 
+require 'uri'
+
 module ChitChat
   # ChitChat App
-  class App < Roda
+  class App < Roda # rubocop:disable Metrics/ClassLength
+    def github_oauth_url
+      base_url = 'https://github.com/login/oauth/authorize'
+      client_id = App.config.GITHUB_OAUTH_CLIENT_ID
+      scope = App.config.GITHUB_OAUTH_SCOPE
+
+      query = URI.encode_www_form({ client_id:, scope: })
+      "#{base_url}?#{query}"
+    end
+
     route('auth') do |routing| # rubocop:disable Metrics/BlockLength
       @login_route = '/auth/login'
 
@@ -15,7 +26,7 @@ module ChitChat
         # GET /auth/login
         routing.get do
           if CurrentSession.new(session).current_account.logged_out?
-            view 'login'
+            view 'login', locals: { github_oauth_url: }
           else
             routing.redirect '/'
           end
@@ -93,6 +104,36 @@ module ChitChat
         rescue RbNaCl::CryptoError
           flash[:error] = 'Invalid token'
           routing.redirect '/'
+        end
+      end
+
+      routing.on 'sso' do
+        routing.on 'github' do
+          routing.on 'callback' do
+            # GET /auth/sso/github/callback
+            routing.get do
+              gh_account = GitHubOAuthAccount.new(App.config).call(routing.params['code'])
+
+              current_account = Account.new(
+                gh_account[:account],
+                gh_account[:auth_token]
+              )
+
+              CurrentSession.new(session).current_account = current_account
+              flash[:success] = "Hi, #{current_account.username}"
+              routing.redirect '/'
+            rescue GitHubOAuthAccount::UnauthorizedError => e
+              flash[:error] = e.message
+              routing.redirect @login_route
+            rescue StandardError => e
+              App.logger.error "GitHub OAuth ERROR: #{e.inspect}"
+              App.logger.error e.backtrace.join("\n")
+
+              flash[:error] = 'Something went wrong. Please try again later.'
+              response.status = 500
+              routing.redirect @login_route
+            end
+          end
         end
       end
     end
