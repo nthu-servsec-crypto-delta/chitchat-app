@@ -28,7 +28,6 @@ describe 'Authenticate Service Spec' do
   describe 'Authenticate Account Service' do
     it 'HAPPY: should login as an authenticated user' do
       auth_account_file = 'spec/fixtures/auth_account.json'
-
       auth_return_json = File.read(auth_account_file)
 
       WebMock.stub_request(:post, "#{API_URL}/auth/authenticate")

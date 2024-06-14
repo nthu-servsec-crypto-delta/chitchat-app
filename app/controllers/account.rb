@@ -13,11 +13,13 @@ module ChitChat
       routing.on do # rubocop:disable Metrics/BlockLength
         # GET /account/<username>
         routing.get String do |username|
-          if @current_account.logged_in? && @current_account.username == username
-            view 'account'
-          else
-            routing.redirect '/auth/login'
-          end
+          account = GetAccountDetails.new(App.config).call(
+            @current_account, username
+          )
+          view 'account', locals: { account: }
+        rescue GetAccountDetails::InvalidAccount => e
+          flash[:error] = e.message
+          routing.redirect '/auth/login'
         end
 
         # POST /account/set_password
