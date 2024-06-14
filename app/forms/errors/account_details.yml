@@ -1,0 +1,8 @@
+en:
+  chitchat:
+    errors:
+      rules:
+        username:
+          format?: Username must be at least 4 characters long, and contain only letters, numbers, and underscores
+        email:
+          format?: Must be a valid email address

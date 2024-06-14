@@ -21,6 +21,7 @@ gem 'rake'
 
 # Security
 gem 'bundler-audit'
+gem 'dry-validation', '~>1.10'
 gem 'rack-ssl-enforcer'
 gem 'rbnacl'
 

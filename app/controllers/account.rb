@@ -23,7 +23,9 @@ module ChitChat
         # POST /account/set_password
         routing.post 'set_password' do
           raise 'Missing registration token' if routing.params['registration_token'].nil?
-          raise 'Passwords do not match' unless routing.params['password'] == routing.params['repeat_password']
+
+          passwords = Form::Passwords.new.call(routing.params)
+          raise Form.message_values(passwords) if passwords.failure?
 
           registration_data = SecureMessage.decrypt(routing.params['registration_token'])
           @account = AccountRegister.new(App.config).call(
