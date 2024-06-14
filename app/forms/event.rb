@@ -4,8 +4,8 @@ require_relative 'form_common'
 
 module ChitChat
   module Form
-    # Form validation for authentication
-    class Event < Dry::Validation::Contract
+    # Form validation for create/edit event
+    class Event < AppContract
       config.messages.load_paths << File.join(__dir__, 'errors/location.yml')
       config.messages.load_paths << File.join(__dir__, 'errors/event.yml')
 

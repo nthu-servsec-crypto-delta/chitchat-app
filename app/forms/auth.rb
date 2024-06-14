@@ -5,7 +5,7 @@ require_relative 'form_common'
 module ChitChat
   module Form
     # Form validation for authentication
-    class LoginCredentials < Dry::Validation::Contract
+    class LoginCredentials < AppContract
       params do
         required(:username).filled
         required(:password).filled
@@ -13,7 +13,7 @@ module ChitChat
     end
 
     # Form validation for registration
-    class Registration < Dry::Validation::Contract
+    class Registration < AppContract
       config.messages.load_paths << File.join(__dir__, 'errors/account_details.yml')
 
       params do
@@ -23,7 +23,7 @@ module ChitChat
     end
 
     # Form validation for set password
-    class Passwords < Dry::Validation::Contract
+    class Passwords < AppContract
       config.messages.load_paths << File.join(__dir__, 'errors/password.yml')
 
       params do
