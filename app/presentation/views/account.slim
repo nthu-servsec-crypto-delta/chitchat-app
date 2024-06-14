@@ -13,9 +13,12 @@
     .my-3
       label.form-label for="email" Email
       input#email.form-control type="email" value="#{account.email}"
-    .my-3
-      dd class="blockquote"
-        a data-bs-toggle="collapse" href="#api_key" aria-expanded="false" aria-controls="api_key" show key
-        div id="api_key" class="collapse"
-          dov class="card card-body"
-            pre class="text-wrap" #{account.auth_token}
+    h2 API Key
+    #apikey-accordion.accordion.my-3
+      .accordion-item
+        h2.accordion-header
+          button.accordion-button.collapsed type="button" data-bs-toggle="collapse" data-bs-target="#apikey" aria-expanded="false" aria-controls="apikey"
+            Accordion API Key (Read Only)
+        #apikey.accordion-collapse.collapse data-bs-parent="#apikey-accordion"
+          .accordion-body
+            pre.text-wrap.my-0 #{account.auth_token}

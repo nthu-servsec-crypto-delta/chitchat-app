@@ -20,7 +20,7 @@ class GetAccountDetails
                    .get("#{@config.API_URL}/accounts/#{username}")
     raise InvalidAccount if response.code != 200
 
-    data = JSON.parse(response)['data']
+    data = response.parse['data']
     account_details = data['attributes']['account']['attributes']
     auth_token = data['attributes']['auth_token']
     ChitChat::Account.new(account_details, auth_token)
