@@ -7,6 +7,8 @@ production:
   SESSION_SECRET: some_secret
   MSG_KEY: <`rake generate:msg_key`>
   REDISCLOUD_URL: <provision Redis instance>
+  GITHUB_OAUTH_SCOPE: user:email
+  GITHUB_OAUTH_CLIENT_ID: <your_github_oauth_client_id>
 
 development:
   API_URL: http://localhost:3000/api/v1
@@ -14,6 +16,8 @@ development:
   SESSION_SECRET: some_secret
   MSG_KEY: <`rake generate:msg_key`>
   REDISCLOUD_URL: redis://localhost:6379/
+  GITHUB_OAUTH_SCOPE: user:email
+  GITHUB_OAUTH_CLIENT_ID: <your_github_oauth_client_id>
 
 test:
   API_URL: http://localhost:3000/api/v1
@@ -21,3 +25,5 @@ test:
   SESSION_SECRET: some_secret
   MSG_KEY: <`rake generate:msg_key`>
   REDISCLOUD_URL: redis://localhost:6379/
+  GITHUB_OAUTH_SCOPE: user:email
+  GITHUB_OAUTH_CLIENT_ID: <your_github_oauth_client_id>
