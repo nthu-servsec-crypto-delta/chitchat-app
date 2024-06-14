@@ -36,13 +36,11 @@ module ChitChat
       end
 
       rule(:password) do
-        # TODO: use template in xml
-        key.failure('Password must be more complex') unless enough_entropy?(value)
+        key.failure(:entropy) unless enough_entropy?(value)
       end
 
       rule(:password, :repeat_password) do
-        # TODO: use template in xml
-        key.failure('Passwords do not match') unless values[:password].eql?(values[:password_confirm])
+        key.failure(:match) unless values[:password].eql?(values[:repeat_password])
       end
     end
   end
