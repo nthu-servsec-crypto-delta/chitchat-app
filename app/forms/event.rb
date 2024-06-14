@@ -6,9 +6,6 @@ module ChitChat
   module Form
     # Form validation for create/edit event
     class Event < AppContract
-      config.messages.load_paths << File.join(__dir__, 'errors/location.yml')
-      config.messages.load_paths << File.join(__dir__, 'errors/event.yml')
-
       params do
         required(:name).filled(:str?)
         optional(:descritpion).filled(:str?)
