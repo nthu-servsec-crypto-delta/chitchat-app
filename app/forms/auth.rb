@@ -28,7 +28,7 @@ module ChitChat
 
       params do
         required(:password).filled
-        required(:password_confirm).filled
+        required(:repeat_password).filled
       end
 
       def enough_entropy?(string)
@@ -40,7 +40,7 @@ module ChitChat
         key.failure('Password must be more complex') unless enough_entropy?(value)
       end
 
-      rule(:password, :password_confirm) do
+      rule(:password, :repeat_password) do
         # TODO: use template in xml
         key.failure('Passwords do not match') unless values[:password].eql?(values[:password_confirm])
       end
