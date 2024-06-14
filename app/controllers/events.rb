@@ -102,12 +102,6 @@ module ChitChat
                 when 'cancel'
                   CancelEventApplication.new(App.config).call(@current_account, event_id)
                   flash[:notice] = 'You have successfully cancelled your application to the event'
-                when 'approve'
-                  ApproveEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
-                  flash[:notice] = 'You have successfully approved the application'
-                when 'reject'
-                  RejectEventApplication.new(App.config).call(@current_account, event_id, routing.params['email'])
-                  flash[:notice] = 'You have successfully rejected the application'
                 else
                   flash[:error] = 'Invalid action'
                 end
