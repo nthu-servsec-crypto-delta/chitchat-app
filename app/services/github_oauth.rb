@@ -13,7 +13,7 @@ module ChitChat
       @config = config
     end
 
-    def call(code)
+    def call(_code) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       signed_sso_info = { access_token: }.then { |sso_info| SignedMessage.sign(sso_info) }
       response = HTTP.post(
         "#{@config.API_URL}/auth/sso",
