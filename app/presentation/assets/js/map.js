@@ -22,14 +22,18 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+const createPostitPopup = L.popup();
+
 map.on('click', function(e) {
-  let postit = L.marker(e.latlng, { icon: postitIcon }).addTo(postitsLayer);
-  postit.bindPopup(`<a href="/postits#${mapEvent.id}:${e.latlng.lat.toFixed(6)},${e.latlng.lng.toFixed(6)}">Create a new postit here</a>`);
+  if (e.latlng.distanceTo(mapEvent.location) > mapEvent.radius) return;
+
+  createPostitPopup.setLatLng(e.latlng)
+                   .setContent(`<a href="/postits#${mapEvent.id}:${e.latlng.lat.toFixed(6)},${e.latlng.lng.toFixed(6)}" target="_blank">Create a new postit here</a>`)
+                   .openOn(map);
 });
 
 const eventMarker = L.marker(mapEvent.location, { title: mapEvent.name }).addTo(map);
-const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`);
-eventMarker.on('click', eventPopup.openPopup);
+const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`).openPopup();
 
 const eventRange = L.circle(mapEvent.location, {
   color: 'red',
@@ -130,7 +134,15 @@ async function sendLocation(coords) {
 
 // postit marker
 const postitsLayer = L.layerGroup().addTo(map);
-let postitIcon = L.divIcon({ className: 'postit-icon', html: `<i class="bi bi-stickies-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
+const postitIcon = L.divIcon({ className: 'postit-icon', html: `<i class="bi bi-sticky-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
+
+const postits = document.querySelectorAll('ul#postits_data li');
+postits?.forEach(postit => {
+  const lat = postit.dataset.lat;
+  const lng = postit.dataset.lng;
+  const postitMarker = L.marker([lat, lng], { icon: postitIcon }).addTo(postitsLayer);
+  postitMarker.bindPopup(`${postit.dataset.message}`, { autoClose: false });
+});
 
 // account marker
 const accountsLayer = L.layerGroup().addTo(map);
