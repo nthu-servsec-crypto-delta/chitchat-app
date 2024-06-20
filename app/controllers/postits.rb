@@ -12,10 +12,12 @@ module ChitChat
           routing.get do
             if @current_account.logged_in?
               postits_data = GetAccountPostits.new(App.config).call(@current_account)
+              events_data = GetAccountEvents.new(App.config).call(@current_account)
 
               postits = Postits.new(postits_data).all
+              events = Events.new(events_data).all
 
-              view :postits_list, locals: { postits: }
+              view :postits_list, locals: { postits:, events: }
             else
               flash[:notice] = 'Please login'
               routing.redirect '/auth/login'
@@ -36,7 +38,7 @@ module ChitChat
                 message: routing.params['message']
               }
 
-              CreatePostit.new(App.config).call(@current_account, postit_data)
+              CreatePostit.new(App.config).call(@current_account, postit_data, routing.params['event_id'])
 
               flash[:notice] = 'Postit created'
               routing.redirect '/postits'

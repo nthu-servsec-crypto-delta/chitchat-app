@@ -1,0 +1,14 @@
+.flex-fill
+  #map style="height: 100%;" data-id="#{event.id}" data-name="#{event.name}" data-lat="#{event.location['latitude']}" data-lng="#{event.location['longitude']}" data-radius="#{event.radius}"
+/ dom as storage
+ul id="postits_data" style="display: none;"
+  - for postit in postits
+    li data-id="#{postit.id}" data-lat="#{postit.location['latitude']}" data-lng="#{postit.location['longitude']}" data-message="#{postit.message}"
+/ Toast if cannot get location
+.toast-container.position-fixed.top-0.end-0.p-3
+  #locationErrorToast.toast
+    .toast-header
+      .me-auto Toast
+      button.btn-close aria-label="Close" data-bs-dismiss="toast"
+    .toast-body Unable to get your location. Please enable location services.
+== assets([:js, :map])

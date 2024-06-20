@@ -13,8 +13,12 @@ module ChitChat
       @config = config
     end
 
-    def call(code)
-      response = HTTP.post("#{@config.API_URL}/auth/sso/github", json: { code: })
+    def call(code) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      signed_sso_code = { code: }.then { |sso_code| SignedMessage.sign(sso_code) }
+      response = HTTP.post(
+        "#{@config.API_URL}/auth/sso/github",
+        json: signed_sso_code
+      )
 
       raise UnauthorizedError, response.parse['message'] if response.code == 403
       raise ApiServerError unless response.code == 200

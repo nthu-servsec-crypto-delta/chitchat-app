@@ -27,7 +27,7 @@ nav.navbar.navbar-expand-lg.bg-secondary data-bs-theme="dark"
               a.nav-link.dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" #{@current_account.username}
               ul.dropdown-menu.dropdown-menu-end
                 li
-                  a.dropdown-item href="/account/#{@current_account.username}"
+                  a.dropdown-item href="/account/#{@current_account.username}" data-username="#{@current_account.username}"
                     i.bi.bi-person.me-2
                     | Account
                 li

@@ -15,7 +15,7 @@ module ChitChat
 
     def to_postits(postits_data)
       postits_data.map do |postit_data|
-        Postit.new(postit_data)
+        Postit.new(postit_data['attributes'])
       end
     end
   end

@@ -50,19 +50,32 @@ table.table
               label.form-label Location
               .col.mb-3
                 label.form-label for="longitude" Longitude
-                input.form-control type="number" id="longitude" name="longitude" required="" 
+                input.form-control type="text" id="longitude" name="longitude" required="" 
               .col.mb-3
                 label.form-label for="latitude" Latitude
-                input.form-control type="number" id="latitude" name="latitude" required=""
+                input.form-control type="text" id="latitude" name="latitude" required=""
             .mb-3
               label.form-label for="radius" Radius
               input.form-control type="number" id="radius" name="radius" required=""
-            .mb-3
+            .row
               label.form-label for="start_time" Start Time
-              input.form-control type="text" id="start_time" name="start_time" required=""
-            .mb-3
+              input.form-control type="hidden" id="start_time" name="start_time" required=""
+              .col.mb-3
+                label.form-label for="start_date" Date
+                input.form-control type="date" id="start_date" name="start_date" required=""
+              .col.mb-3
+                label.form-label for="start_hour" Time
+                input.form-control type="time" id="start_hour" name="start_hour" step="1" required=""
+            .row
               label.form-label for="end_time" End Time
-              input.form-control type="text" id="end_time" name="end_time" required=""
+              input.form-control type="hidden" id="end_time" name="end_time" required=""
+              .col.mb-3
+                label.form-label for="end_date" Date
+                input.form-control type="date" id="end_date" name="end_date" required=""
+              .col.mb-3
+                label.form-label for="end_hour" Time
+                input.form-control type="time" id="end_hour" name="end_hour" step="1" required=""
         .modal-footer
           .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
           button.btn.btn-primary type="submit" Create
+== assets([:js, :events])

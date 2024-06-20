@@ -9,6 +9,9 @@
       i.bi.bi-clock.me-2
       | #{event.start_time} ~ #{event.end_time}
     .d-grid
+      a.btn.btn-info.mt-2 href="/events/#{event.id}/map"
+        i.bi.bi-map-fill.me-2
+        | Open In Map
       - if policy.can_edit
         button.btn.btn-primary.mt-2 data-bs-toggle="modal" data-bs-target="#edit-event-modal"
           i.bi.bi-pencil.me-2

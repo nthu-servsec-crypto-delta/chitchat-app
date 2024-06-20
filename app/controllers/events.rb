@@ -46,11 +46,8 @@ module ChitChat
           routing.is do # rubocop:disable Metrics/BlockLength
             # GET /events/[event_id]
             routing.get do
-              event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
-              event_data = event_response['attributes']
-              policies_data = event_response['policies']
+              event_data, policies_data = GetEventDetail.new(App.config).call(@current_account, event_id)
               policy = PolicySummary.new(policies_data)
-
               event = Event.new(event_data)
 
               view :event_detail, locals: { event:, policy: }
@@ -185,6 +182,37 @@ module ChitChat
                    Form::ValidationError => e
               flash[:error] = e.message
               routing.redirect @current_event_route
+            end
+          end
+
+          routing.on 'map' do
+            # GET /events/[event_id]/map
+            routing.get do
+              event_data, _policies_data = GetEventDetail.new(App.config).call(@current_account, event_id)
+              postits_data = GetEventPostits.new(App.config).call(@current_account, event_id)
+
+              event = Event.new(event_data)
+              postits = Postits.new(postits_data).all
+
+              view :map, layout_opts: { locals: { has_map: true } }, locals: { event:, postits: }
+            end
+          end
+
+          # POST /events/[event_id]/location
+          routing.on 'location' do
+            routing.post do
+              response.headers['Content-Type'] = 'application/json'
+
+              location_data = Form::Location.new.call(routing.params)
+
+              accounts = UpdateAccountLocation.new(App.config).call(
+                @current_account, location_data[:latitude], location_data[:longitude], event_id
+              )
+
+              accounts.to_json
+            rescue UpdateAccountLocation::ApiError => e
+              response.status = 500
+              { error: e.message }.to_json
             end
           end
         end
