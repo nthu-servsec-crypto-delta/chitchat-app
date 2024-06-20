@@ -33,7 +33,7 @@ map.on('click', function(e) {
 });
 
 const eventMarker = L.marker(mapEvent.location, { title: mapEvent.name }).addTo(map);
-const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`).openPopup();
+const eventPopup = eventMarker.bindPopup(DOMPurify.sanitize(`<b>${mapEvent.name}</b>`)).openPopup();
 
 const eventRange = L.circle(mapEvent.location, {
   color: 'red',
@@ -141,7 +141,7 @@ postits?.forEach(postit => {
   const lat = postit.dataset.lat;
   const lng = postit.dataset.lng;
   const postitMarker = L.marker([lat, lng], { icon: postitIcon }).addTo(postitsLayer);
-  postitMarker.bindPopup(`${postit.dataset.message}`, { autoClose: false });
+  postitMarker.bindPopup(DOMPurify.sanitize(`${postit.dataset.message}`), { autoClose: false });
 });
 
 // account marker
