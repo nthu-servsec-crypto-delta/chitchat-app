@@ -1,5 +1,10 @@
+const username = document.querySelector("nav a[data-username]").dataset.username;
+
 const $map = document.getElementById('map');
+const $locationErrorToast = document.getElementById('locationErrorToast');
+
 const mapEvent = {
+  id: $map.dataset.id,
   name: $map.dataset.name,
   radius: $map.dataset.radius,
   _location: {
@@ -12,6 +17,14 @@ const mapEvent = {
 }
 
 const map = L.map('map').setView(mapEvent.location, 16);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 20,
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+const eventMarker = L.marker(mapEvent.location, { title: mapEvent.name }).addTo(map);
+const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`);
+eventMarker.on('click', eventPopup.openPopup);
+
 const eventRange = L.circle(mapEvent.location, {
   color: 'red',
   fillColor: '#f03',
@@ -19,34 +32,26 @@ const eventRange = L.circle(mapEvent.location, {
   radius: mapEvent.radius
 }).addTo(map);
 
-const eventMarker = L.marker(mapEvent.location, { title: mapEvent.name }).addTo(map);
-const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`);
-eventMarker.on('click', () => {
-  eventPopup.openPopup();
-});
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 20,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
-
 const locationOptions = {
   enableHighAccuracy: true,
   timeout: 5000,
   maximumAge: 0
 };
+
 let coords = null;
 
-function onLocationSuccess(e) {
-  coords = e.coords;
-  map.setView([e.coords.latitude, e.coords.longitude], 16);
-  currentLocationMarker.setLatLng([coords.latitude, coords.longitude]);
-}
+function getCurrentLocation() {
+  return new Promise((resolve, reject) => {
+    function onLocationSuccess(e) {
+      resolve(e.coords);
+    }
+    
+    function onLocationError(e) {
+      reject(e);
+    }
 
-function onLocationError(e) {
-  // trigger bootstrap toast
-  const toast = bootstrap.Toast.getOrCreateInstance(document.getElementById('locationErrorToast'));
-  toast.show();
+    navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, locationOptions);
+  });
 }
 
 L.Control.CurrentLocation = L.Control.extend({
@@ -55,11 +60,12 @@ L.Control.CurrentLocation = L.Control.extend({
     container.innerHTML = '<i class="bi bi-crosshair2"></i>';
     container.title = 'Go To Current Location';
 
-    container.onclick = function() {
+    container.onclick = async function() {
       // move first
-      console.log('click')
       if (coords) map.setView([coords.latitude, coords.longitude]);
-      navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, locationOptions);
+
+      await updateLocation();
+      map.setView([coords.latitude, coords.longitude]);
     }
 
     return container;
@@ -85,12 +91,61 @@ L.control.currentEvent = function(opts) { return new L.Control.CurrentEvent(opts
 L.control.currentEvent({ position: 'bottomright' }).addTo(map);
 
 // current location marker
-const $currentLocationIcon = L.divIcon({ className: 'current-location-icon', iconSize: [20, 20], bgPos: [8, 8] });
-const currentLocationMarker = L.marker([0, 0], { icon: $currentLocationIcon }).addTo(map);
+const currentLocationIcon = L.divIcon({ className: 'current-location-icon', iconSize: [20, 20], bgPos: [10, 10] });
+const currentLocationMarker = L.marker([0, 0], { icon: currentLocationIcon, zIndexOffset: 1000 }).addTo(map);
 
-navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, locationOptions);
+(async () => {
+  await updateLocation();
+})();
 
-// setInterval(() => {
-//   console.log('Updating current location marker...');
-//   navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError, locationOptions);
-// }, locationOptions.timeout);
+setInterval(async () => {
+  console.log('Updating current location marker...');
+  await updateLocation();
+}, locationOptions.timeout);
+
+async function sendLocation(coords) {
+  try {
+    const formData = new FormData();
+    formData.append('latitude', coords.latitude);
+    formData.append('longitude', coords.longitude);
+
+    let response = await fetch(`/events/${mapEvent.id}/location`, {
+      method: 'POST',
+      body: formData
+    });
+
+    let accounts = await response.json();
+
+    return accounts;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// postit marker
+const postitsLayer = L.layerGroup().addTo(map);
+let postitIcon = L.divIcon({ className: 'postit-icon', html: `<i class="bi bi-stickies-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
+
+// account marker
+const accountsLayer = L.layerGroup().addTo(map);
+let accountIcon = L.divIcon({ className: 'account-icon', html: `<i class="bi bi-person-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
+
+async function updateLocation() {
+  try {
+    coords = await getCurrentLocation();
+    currentLocationMarker.setLatLng([coords.latitude, coords.longitude]);
+  } catch (error) {
+    console.error(error);
+    const toast = bootstrap.Toast.getOrCreateInstance($locationErrorToast);
+    toast.show();
+  }
+
+  let accounts = await sendLocation(coords);
+  accountsLayer.clearLayers();
+  accounts.forEach(data => {
+    account = data.attributes;
+    if (account.username === username) return;
+
+    L.marker([account.location.latitude, account.location.longitude], { icon: accountIcon }).addTo(accountsLayer);
+  });
+}

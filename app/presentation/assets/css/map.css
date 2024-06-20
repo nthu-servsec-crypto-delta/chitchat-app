@@ -14,3 +14,20 @@ body {
   border-radius: 50%;
   background-color: blue;
 }
+
+.postit-icon,
+.account-icon {
+  width: 30px;
+  height: 30px;
+
+  color: black;
+  font-size: 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.postit-icon {
+  color: yellow;
+}
