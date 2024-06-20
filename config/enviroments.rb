@@ -4,7 +4,6 @@ require 'roda'
 require 'figaro'
 require 'logger'
 require 'rack/session'
-require 'rack/ssl-enforcer'
 require 'rack/session/redis'
 require_relative '../require_app'
 
@@ -39,11 +38,6 @@ module ChitChat
       use Rack::Session::Redis,
           expire_after: ONE_MONTH,
           redis_server: @redis_url
-    end
-
-    # Force SSL
-    configure :production do
-      use Rack::SslEnforcer, hsts: true
     end
 
     # HTTP Request logging
