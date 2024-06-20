@@ -13,7 +13,7 @@ module ChitChat
       response = HTTP.auth("Bearer #{current_account.auth_token}")
                      .get("#{@config.API_URL}/postits/#{postit_id}")
 
-      response.code == 200 ? response.parse : nil
+      response.code == 200 ? response.parse['attributes'] : nil
     end
   end
 end
