@@ -9,7 +9,7 @@ module ChitChat
       @id = postit_data['id']
       @location = postit_data['location']
       @message = postit_data['message']
-      @event = Event.new(postit_data['event']['attributes']) if postit_data['event']
+      @event = postit_data['event']['attributes'] if postit_data['event']
     end
   end
 end

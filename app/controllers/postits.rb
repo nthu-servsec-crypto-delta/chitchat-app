@@ -38,7 +38,7 @@ module ChitChat
                 message: routing.params['message']
               }
 
-              CreatePostit.new(App.config).call(@current_account, postit_data)
+              CreatePostit.new(App.config).call(@current_account, postit_data, routing.params['event_id'])
 
               flash[:notice] = 'Postit created'
               routing.redirect '/postits'

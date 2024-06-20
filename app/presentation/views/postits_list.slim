@@ -17,7 +17,7 @@ table.table
           td -
         - else
           td
-            a href="/events/#{postit.event.id}" #{postit.event.name}
+            a href="/events/#{postit.event['id']}" #{postit.event['name']}
 
 .text-end
   button.btn.btn-primary data-bs-toggle="modal" data-bs-target="#create-postit-modal"
