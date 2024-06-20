@@ -7,6 +7,7 @@ module ChitChat
     # Form validation for create postit
     class Postit < AppContract
       params do
+        required(:event_id).filled(:integer)
         optional(:message).filled(:string)
         required(:longitude).filled(:float, gt?: -180, lt?: 180)
         required(:latitude).filled(:float, gt?: -180, lt?: 180)
