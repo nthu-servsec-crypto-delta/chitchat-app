@@ -21,6 +21,12 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 20,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+map.on('click', function(e) {
+  let postit = L.marker(e.latlng, { icon: postitIcon }).addTo(postitsLayer);
+  postit.bindPopup(`<a href="/postits#${mapEvent.id}:${e.latlng.lat.toFixed(6)},${e.latlng.lng.toFixed(6)}">Create a new postit here</a>`);
+});
+
 const eventMarker = L.marker(mapEvent.location, { title: mapEvent.name }).addTo(map);
 const eventPopup = eventMarker.bindPopup(`<b>${mapEvent.name}</b>`);
 eventMarker.on('click', eventPopup.openPopup);

@@ -35,13 +35,14 @@ table.table
                 option value=event.id = event.name
           .mb-3
             label.form-label for="latitude" Latitude
-            input.form-control type="number" id="latitude" name="latitude" step="0.01" required=""
+            input.form-control type="text" id="latitude" name="latitude" required=""
           .mb-3
             label.form-label for="longitude" Longitude
-            input.form-control type="number" id="longitude" name="longitude" step="0.01" required=""
+            input.form-control type="text" id="longitude" name="longitude" required=""
           .mb-3
             label.form-label for="message" Message
             input.form-control type="text" id="message" name="message" required=""
         .modal-footer
           .btn.btn-secondary type="button" data-bs-dismiss="modal" Close
           button.btn.btn-primary type="submit" Create
+== assets([:js, :postits])
