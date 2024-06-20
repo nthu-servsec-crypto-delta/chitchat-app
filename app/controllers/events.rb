@@ -187,6 +187,12 @@ module ChitChat
               routing.redirect @current_event_route
             end
           end
+
+          routing.on 'map' do
+            routing.get do
+              view :map, layout_opts: { locals: { has_map: true } }
+            end
+          end
         end
       end
     end
