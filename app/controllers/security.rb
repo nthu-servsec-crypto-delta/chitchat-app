@@ -43,7 +43,7 @@ module ChitChat
         preserve_schemes: true,
         default_src: %w['self'],
         child_src: %w['self'],
-        connect_src: %w[wws:],
+        connect_src: %w['self' wws:],
         img_src: %w['self'],
         font_src: %w['self'] + FONT_SRC,
         script_src: %w['self'] + SCRIPT_SRC,
