@@ -14,7 +14,7 @@ module ChitChat
     FONT_SRC = %w[https://cdnjs.cloudflare.com].freeze
     SCRIPT_SRC = %w[https://cdnjs.cloudflare.com].freeze
     STYLE_SRC = %w[https://cdnjs.cloudflare.com].freeze
-    IMAGE_SRC = %w[https://tile.openstreetmap.org].freeze
+    IMAGE_SRC = %w[https://cdnjs.cloudflare.com https://tile.openstreetmap.org].freeze
 
     configure :production do
       use Rack::SslEnforcer, hsts: true
