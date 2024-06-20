@@ -5,6 +5,7 @@ table.table
       th #
       th Message
       th Location
+      th Event
   tbody
     - postits.each do |postit|
       tr
@@ -12,6 +13,11 @@ table.table
           a href="/postits/#{postit.id}" #{postit.id}
         td #{postit.message}
         td #{postit.location.values.join(', ')}
+        - if postit.event.nil?
+          td -
+        - else
+          td
+            a href="/events/#{postit.event.id}" #{postit.event.name}
 
 .text-end
   button.btn.btn-primary data-bs-toggle="modal" data-bs-target="#create-postit-modal"
