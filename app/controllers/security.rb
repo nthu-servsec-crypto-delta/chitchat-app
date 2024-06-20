@@ -11,9 +11,9 @@ module ChitChat
     plugin :environments
     plugin :multi_route
 
-    FONT_SRC = %w[https://cdn.jsdelivr.net https://cdnjs.cloudflare.com].freeze
-    SCRIPT_SRC = %w[https://cdn.jsdelivr.net https://cdnjs.cloudflare.com].freeze
-    STYLE_SRC = %w[https://cdn.jsdelivr.net https://cdnjs.cloudflare.com].freeze
+    FONT_SRC = %w[https://cdnjs.cloudflare.com].freeze
+    SCRIPT_SRC = %w[https://cdnjs.cloudflare.com].freeze
+    STYLE_SRC = %w[https://cdnjs.cloudflare.com].freeze
     IMAGE_SRC = %w[https://tile.openstreetmap.org].freeze
 
     configure :production do
