@@ -17,7 +17,9 @@ module ChitChat
 
       raise NotFoundError, 'Event not found' if response.code == 404
 
-      response.code == 200 ? response.parse : nil
+      data = response.parse
+
+      response.code == 200 ? [data['attributes'], data['policies']] : nil
     end
   end
 end

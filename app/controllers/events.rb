@@ -46,11 +46,8 @@ module ChitChat
           routing.is do # rubocop:disable Metrics/BlockLength
             # GET /events/[event_id]
             routing.get do
-              event_response = GetEventDetail.new(App.config).call(@current_account, event_id)
-              event_data = event_response['attributes']
-              policies_data = event_response['policies']
+              event_data, policies_data = GetEventDetail.new(App.config).call(@current_account, event_id)
               policy = PolicySummary.new(policies_data)
-
               event = Event.new(event_data)
 
               view :event_detail, locals: { event:, policy: }
