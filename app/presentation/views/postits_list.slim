@@ -28,6 +28,12 @@ table.table
           .btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
         .modal-body
           .mb-3
+            label.form-label for="event_id" Event
+            select.form-select id="event_id" name="event_id"
+              option value="" Select an event
+              - events.each do |event|
+                option value=event.id = event.name
+          .mb-3
             label.form-label for="latitude" Latitude
             input.form-control type="number" id="latitude" name="latitude" step="0.01" required=""
           .mb-3
