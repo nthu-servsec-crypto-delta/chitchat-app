@@ -187,7 +187,10 @@ module ChitChat
 
           routing.on 'map' do
             routing.get do
-              view :map, layout_opts: { locals: { has_map: true } }
+              event_data, _policies_data = GetEventDetail.new(App.config).call(@current_account, event_id)
+              event = Event.new(event_data)
+
+              view :map, layout_opts: { locals: { has_map: true } }, locals: { event: }
             end
           end
         end
