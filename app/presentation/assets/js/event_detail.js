@@ -1,4 +1,4 @@
-document.querySelector("#remove-co-organizer-form").addEventListener("click", function(ev) {
+document.querySelector("#remove-co-organizer-form")?.addEventListener("click", function(ev) {
   if (!ev.target.matches("button, button > *")) return;
 
   let $button = ev.target.closest("button");
@@ -8,7 +8,7 @@ document.querySelector("#remove-co-organizer-form").addEventListener("click", fu
   $form.querySelector("input[name='email']").value = email;
 });
 
-document.querySelector("#applicants-form").addEventListener("click", function(ev) {
+document.querySelector("#applicants-form")?.addEventListener("click", function(ev) {
   if (!ev.target.matches("button, button > *")) return;
 
   let $button = ev.target.closest("button");
