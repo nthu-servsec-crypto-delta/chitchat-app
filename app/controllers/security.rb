@@ -14,7 +14,7 @@ module ChitChat
     FONT_SRC = %w[https://cdnjs.cloudflare.com].freeze
     SCRIPT_SRC = %w[https://cdnjs.cloudflare.com].freeze
     STYLE_SRC = %w[https://cdnjs.cloudflare.com].freeze
-    IMAGE_SRC = %w[https://tile.openstreetmap.org].freeze
+    IMAGE_SRC = %w[https://cdnjs.cloudflare.com https://tile.openstreetmap.org data:].freeze
 
     configure :production do
       use Rack::SslEnforcer, hsts: true
@@ -43,11 +43,11 @@ module ChitChat
         preserve_schemes: true,
         default_src: %w['self'],
         child_src: %w['self'],
-        connect_src: %w[wws:],
-        img_src: %w['self'],
+        connect_src: %w['self' wws:],
+        img_src: %w['self'] + IMAGE_SRC,
         font_src: %w['self'] + FONT_SRC,
         script_src: %w['self'] + SCRIPT_SRC,
-        style_src: %W['self'] + STYLE_SRC,
+        style_src: %W['self' 'unsafe-inline'] + STYLE_SRC,
         form_action: %w['self'],
         frame_ancestors: %w['none'],
         object_src: %w['none'],
