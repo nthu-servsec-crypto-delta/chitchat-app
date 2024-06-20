@@ -44,7 +44,7 @@ module ChitChat
         default_src: %w['self'],
         child_src: %w['self'],
         connect_src: %w['self' wws:],
-        img_src: %w['self'],
+        img_src: %w['self'] + IMAGE_SRC,
         font_src: %w['self'] + FONT_SRC,
         script_src: %w['self'] + SCRIPT_SRC,
         style_src: %W['self'] + STYLE_SRC,
