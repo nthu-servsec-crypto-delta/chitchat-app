@@ -14,7 +14,8 @@ module ChitChat
     end
 
     def call(username:, password:)
-      response = HTTP.post("#{@config.API_URL}/auth/authenticate", json: { username:, password: })
+      credentials = { username:, password:}
+      response = HTTP.post("#{@config.API_URL}/auth/authenticate", json: SignedMessage.sign(credentials))
 
       raise UnauthorizedError if response.code == 403
       raise ApiServerError unless response.code == 200

@@ -27,6 +27,7 @@ module ChitChat
     ONE_MONTH = 30 * 24 * 60 * 60
     @redis_url = ENV.delete('REDISCLOUD_URL')
     SecureMessage.setup(ENV.delete('MSG_KEY'))
+    SignedMessage.setup(config)
     SecureSession.setup(@redis_url)
 
     configure :development, :test do

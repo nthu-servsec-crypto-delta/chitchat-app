@@ -31,7 +31,7 @@ describe 'Authenticate Service Spec' do
       auth_return_json = File.read(auth_account_file)
 
       WebMock.stub_request(:post, "#{API_URL}/auth/authenticate")
-             .with(body: @test_credentials.to_json)
+             .with(body: SignedMessage.sign(@test_credentials).to_json)
              .to_return(body: auth_return_json,
                         headers: { 'content-type' => 'application/json' })
 
@@ -44,7 +44,7 @@ describe 'Authenticate Service Spec' do
 
     it 'SAD: should reject invalid credentials' do
       WebMock.stub_request(:post, "#{API_URL}/auth/authenticate")
-             .with(body: @invalid_credentials.to_json)
+             .with(body: SignedMessage.sign(@invalid_credentials).to_json)
              .to_return(
                body: { message: 'Invalid credentials' }.to_json,
                status: 403,
