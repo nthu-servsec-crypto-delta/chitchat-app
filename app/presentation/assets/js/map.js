@@ -134,7 +134,7 @@ let postitIcon = L.divIcon({ className: 'postit-icon', html: `<i class="bi bi-st
 
 // account marker
 const accountsLayer = L.layerGroup().addTo(map);
-let accountIcon = L.divIcon({ className: 'account-icon', html: `<i class="bi bi-person-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
+const accountIcon = L.divIcon({ className: 'account-icon', html: `<i class="bi bi-person-fill"></i>`, iconSize: [30, 30], bgPos: [15, 15] });
 
 async function updateLocation() {
   try {
@@ -149,9 +149,10 @@ async function updateLocation() {
   let accounts = await sendLocation(coords);
   accountsLayer.clearLayers();
   accounts.forEach(data => {
-    account = data.attributes;
+    const account = data.attributes;
     if (account.username === username) return;
 
-    L.marker([account.location.latitude, account.location.longitude], { icon: accountIcon }).addTo(accountsLayer);
+    const accountMarker = L.marker([account.location.latitude, account.location.longitude], { icon: accountIcon }).addTo(accountsLayer);
+    accountMarker.bindPopup(`<a href="/account/${account.username}" target="_blank">${account.username}</a>`, { autoClose: false });
   });
 }
