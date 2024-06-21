@@ -7,6 +7,21 @@ module ChitChat
   class App < Roda # rubocop:disable Metrics/ClassLength
     route('events') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on do # rubocop:disable Metrics/BlockLength
+        routing.on 'all' do
+          # GET /events/all
+          routing.get do
+            if @current_account.logged_in?
+              events_response = GetEvents.new(App.config).call(@current_account)
+              events = Events.new(events_response).all
+
+              view :events_list, locals: { events: }
+            else
+              flash[:notice] = 'Please login'
+              routing.redirect '/auth/login'
+            end
+          end
+        end
+
         routing.is do
           # GET /events
           routing.get do
